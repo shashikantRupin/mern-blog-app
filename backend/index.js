@@ -11,7 +11,6 @@ app.use(express.json());
 app.use(cors());
 
 
-
 app.get('/', (req,res)=>{
     res.send({'app runing u are on home page now ': req.headers});
 });
