@@ -1,13 +1,13 @@
-const connection = require('./configs/db')
-const bcrypt = require('bcrypt');
-const UserModel = require('./models/User.module');
-const jwt = require('jsonwebtoken');
-const blogRouter = require('./Router/blog.Routes');
-const {autentication}= require('./middleware/authentication');
-const cors = require('cors');
-const express= require('express');
+import connection from './configs/db';
+import { hash as _hash, compare } from 'bcrypt';
+import { create, findOne } from './models/User.module';
+import { sign } from 'jsonwebtoken';
+import blogRouter from './Router/blog.Routes';
+import { autentication } from './middleware/authentication';
+import cors from 'cors';
+import express, { json } from 'express';
 const app= express();
-app.use(express.json());
+app.use(json());
 app.use(cors());
 
 
@@ -19,8 +19,8 @@ app.get('/', (req,res)=>{
 app.post('/signup', async (req,res)=>{
     const { name , email , password} = req.body;
     try {
-           bcrypt.hash(password, 4, async function(err, hash) {
-           await  UserModel.create({name : name , email : email , password : hash});
+           _hash(password, 4, async function(err, hash) {
+           await  create({name : name , email : email , password : hash});
            res.send({ msg : ' sign up succusfull ' ,name : name , email : email , password : hash});
         });
            
@@ -36,19 +36,19 @@ app.post('/signup', async (req,res)=>{
 app.post('/login', async (req, res) => {
     const { email, password } = req.body; 
     try {
-        const user = await UserModel.findOne({ email });
+        const user = await findOne({ email });
 
         if (!user) {
             return res.status(400).json({ msg: 'User not found' });
         }
 
 
-        bcrypt.compare(password, user.password, (err, result) => {
+        compare(password, user.password, (err, result) => {
             if (err) {
                 throw err;
             }
             if (result) {
-                const token = jwt.sign({userId: user._id}, 'secret');
+                const token = sign({userId: user._id}, 'secret');
                 console.log(result);
                 return res.json({ msg: 'Login successful', token});
             } else {
