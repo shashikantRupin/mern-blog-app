@@ -1,3 +1,4 @@
+const express= require('express');
 const connection = require('./configs/db')
 const bcrypt = require('bcrypt');
 const UserModel = require('./models/User.module');
@@ -5,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const blogRouter = require('./Router/blog.Routes');
 const {autentication}= require('./middleware/authentication');
 const cors = require('cors');
-const express= require('express');
 const app= express();
 app.use(express.json());
 app.use(cors());
