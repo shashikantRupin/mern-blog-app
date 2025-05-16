@@ -1,33 +1,54 @@
-import {Route , Routes} from 'react-router-dom';
-import Home from './Home';
-import Login from './Login';
-import SignUp from './SignUP';
-import MyBlogs from './MyBLogs';
-import Create from './Create'
-import Blogs from './Blogs';
-import About from './About';
-import Contact from './Contact';
-import BlogDetail from './BlogDetail';
+import { Route, Routes } from "react-router-dom";
+import Home from "./Home";
+import Login from "./Login";
+import SignUp from "./SignUP";
+import MyBlogs from "./MyBLogs";
+import Create from "./Create";
+import Blogs from "./Blogs";
+import About from "./About";
+import Contact from "./Contact";
+import BlogDetail from "./BlogDetail";
+import PrivateRoute from "./PrivateRoute";
 
+const AllRoutes = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/blogDetail/:id" element={<PrivateRoute><BlogDetail/></PrivateRoute>} />
 
- const AllRoutes=()=>{
-return(
+      {/* Private Routes */}
+      <Route
+        path="/blogs"
+        element={
+          <PrivateRoute>
+            <Blogs />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/myBlogs"
+        element={
+          <PrivateRoute>
+            <MyBlogs />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/create"
+        element={
+          <PrivateRoute>
+            <Create />
+          </PrivateRoute>
+        }
+      />
 
-<Routes>
-<Route path="/login"  element={<Login/>}></Route>
-<Route path="/Signup"  element={<SignUp/>}></Route>
-<Route path="/"  element={<Home/>}></Route>
-<Route path="/Blogs"  element={<Blogs/>}></Route>
-<Route path="/myBlogs"  element={<MyBlogs/>}></Route>
-<Route path="/blogDetail/:id"  element={<BlogDetail/>}></Route>
+      {/* Optional routes (uncomment if needed) */}
+      {/* <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} /> */}
+    </Routes>
+  );
+};
 
-
-<Route path="/create"  element={<Create/>}></Route>
-{/* <Route path="/about"  element={<About/>}></Route>
-<Route path="/contact"  element={<Contact/>}></Route> */}
-
-
-</Routes>
-)
-}
 export default AllRoutes;

@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import "./hf.css";
+import "../styles/footer.css";
 import { AuthContext } from "./AuthContext";
 import { Link } from "react-router-dom";
 import { baseURL } from "../api";
-import img1 from "../images/img1.jpg"
-
+import img1 from "../images/img1.jpg";
 
 const staticBlogs = [
   {
@@ -37,12 +36,12 @@ const staticBlogs = [
   },
 ];
 
-
 const Home = () => {
   const { token } = useContext(AuthContext);
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState("");
+  const { loggedIn } = useContext(AuthContext);
 
   const fetchBlogs = async (type) => {
     setLoading(true);
@@ -52,9 +51,9 @@ const Home = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-       console.log("resData",response.data)
-      setBlogs(response.data);
-      console.log(response.data);
+      console.log("resData", response.data);
+      setBlogs(response?.data);
+      console.log(response?.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
@@ -62,7 +61,9 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchBlogs(type);
+    if (token) {
+      fetchBlogs(type);
+    }
   }, [token, type]);
 
   const justfetch = () => {
@@ -160,7 +161,7 @@ const Home = () => {
       <div className="post container">
         {/* API blogs come first */}
         {blogs.length !== 0 ? (
-          blogs.map((blog) => (
+          blogs?.map((blog) => (
             <div className="post-box" key={blog._id}>
               <Link to={`/blogDetail/${blog._id}`}>
                 <img src={blog.imageUrl} alt="dynamic" className="post-img" />
@@ -191,7 +192,7 @@ const Home = () => {
         )}
 
         {/* Static blogs shown after dynamic blogs */}
-        {staticBlogs.map((blog) => (
+        {staticBlogs?.map((blog) => (
           <div className="post-box" key={blog._id}>
             <Link to={`/blogDetail/${blog._id}`}>
               <img src={blog.imageUrl} alt="static" className="post-img" />

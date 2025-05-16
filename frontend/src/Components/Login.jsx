@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import "./login.css";
+import "../styles/login.css";
 import { AuthContext } from "./AuthContext";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { baseURL } from "../api";
 
 const Login = () => {
@@ -11,21 +11,23 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+  const navigate=useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // inside handleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(`${baseURL}/login`, formData);
-      const { token } = response.data;
+      const { token, name } = response.data;
 
-      console.log(response.data);
       setToken(token);
       setLoggedIn(true);
-      setUser(formData);
+      setUser({ name: name || formData.email });
+
+      navigate("/"); // redirect to homepage
     } catch (error) {
       console.error("Error logging in:", error);
     }
@@ -35,13 +37,17 @@ const Login = () => {
     <div
       style={{
         backgroundImage:
-          "url('https://media1.tenor.com/m/9n_ZqBC2y_wAAAAC/nature-japan.gif')",
+          "url('https://i.makeagif.com/media/2-24-2021/JT4fO9.gif')",
         backgroundRepeat: "no-repeat",
-        width: "100%",
         backgroundSize: "cover",
+        backgroundPosition: "center",
+        width: "100%",
         height: "800px",
         display: "flex",
         marginBottom: "-140px",
+        imageRendering: "auto",
+        backfaceVisibility: "hidden",
+        transform: "translateZ(0)",
       }}
     >
       <div class="wrapper">

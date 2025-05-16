@@ -18,8 +18,8 @@ const Blogs = () => {
         },
       });
 
-      setBlogs(response.data);
-      console.log(response.data);
+      setBlogs(response?.data);
+      console.log(response?.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
@@ -118,7 +118,7 @@ const Blogs = () => {
         }}
       >
         {!loading ? (
-          blogs.map((blog) => (
+          blogs?.map((blog) => (
             <div
               key={blog._id}
               style={{
@@ -184,7 +184,7 @@ const Blogs = () => {
           />
         )}
 
-        {blogs.length === 0 ? (
+        {blogs?.length === 0 ? (
           <div style={{ width: "600px", margin: "auto" }}>
             <img src="https://cdn.dribbble.com/users/95510/screenshots/1694572/no-chat_gif.gif" />
           </div>

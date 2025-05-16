@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import "./create.css";
+import "../styles/create.css";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import { baseURL } from "../api";

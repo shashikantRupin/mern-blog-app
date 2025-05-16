@@ -19,8 +19,8 @@ const Blogs = () => {
         },
       });
 
-      setBlogs(response.data);
-      console.log(response.data);
+      setBlogs(response?.data);
+      console.log(response?.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
@@ -102,7 +102,7 @@ const Blogs = () => {
 
       <div className="post container">
         {!loading ? (
-          blogs.map((blog) => (
+          blogs?.map((blog) => (
             <div className="post-box" key={blog._id}>
               <img src={blog.imageUrl} alt="" className="post-img" />
               <h2 className="category">{blog.type}</h2>

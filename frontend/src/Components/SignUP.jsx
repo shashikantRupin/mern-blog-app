@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./login.css";
+import "../styles/login.css";
 import { NavLink } from "react-router-dom";
 import { baseURL } from "../api";
 
