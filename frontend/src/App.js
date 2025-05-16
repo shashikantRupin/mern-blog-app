@@ -4,6 +4,8 @@ import Footer from './Components/Footer';
 import AllRoutes from './Components/AllRoutes';
 import { AuthProvider } from './Components/AuthContext';
 import Navbar from './Components/Nav';
+import "react-confirm-alert/src/react-confirm-alert.css";
+
 
 function App() {
   return (

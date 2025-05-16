@@ -6,6 +6,7 @@ const PrivateRoute = ({children}) => {
       const { loggedIn } = useContext(AuthContext);
 
       if (!loggedIn) {
+        alert("login first");
         return <Navigate to="/login" replace />;
       }
 

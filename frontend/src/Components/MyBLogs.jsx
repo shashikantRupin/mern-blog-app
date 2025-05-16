@@ -3,13 +3,18 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import { baseURL } from "../api";
+import "../styles/myBlog.css"; 
+import { confirmAlert } from "react-confirm-alert";
+
+
 const Blogs = () => {
   const { token } = useContext(AuthContext);
   const [blogs, setBlogs] = useState([]);
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
+  const { confirmAction } = useContext(AuthContext);
 
-  const fetchBlogs = async (type) => {
+  const fetchBlogs = async (type="") => {
     setLoading(true);
     try {
       const response = await axios.get(`${baseURL}/blogs?type=${type}`, {
@@ -47,35 +52,37 @@ const Blogs = () => {
   };
 
   const handleDelete = async (id) => {
+    const isConfirmed = await confirmAction(
+      "Confirm Deletion",
+      "Are you sure you want to delete this blog?"
+    );
+
+    if (!isConfirmed) return;
+
     try {
-      await axios.delete(`${baseURL}/blogs/delete/${id}`, {
+    const res=  await axios.delete(`${baseURL}/blogs/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+     
       });
-      alert("blog deleted");
+      if (res.status == 200 || res.status==201) {
+        fetchBlogs()
+        alert("Blog deleted successfully.");
+      }
+      // Optionally, refresh the blog list or navigate as needed
     } catch (error) {
       console.error("Error deleting blog:", error);
+      alert("Failed to delete the blog. Please try again.");
     }
   };
+  
+  const isSingleItem = blogs.length === 1;
 
+  
   return (
     <div>
-      <div
-        className="post-filter container"
-        style={{
-          display: "flex",
-          gap: "10px",
-          margin: "auto",
-          width: "300px",
-          padding: "20px",
-          fontSize: "20px",
-          justifyContent: "space-between",
-          border: "2px solid black",
-          borderEndStartRadius: "10px",
-          borderEndEndRadius: "10px",
-        }}
-      >
+      <div className="post-filter container">
         <span
           className="filter-item"
           onClick={justfetch}
@@ -106,70 +113,54 @@ const Blogs = () => {
         </span>
       </div>
 
-      <h2>Your Blogs</h2>
+      <h2 className="your-blogs-heading">Your Blogs</h2>
 
       <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          rowGap: "30px",
-          padding: "70px",
-          justifyContent: "center",
-        }}
+        className={`${
+          isSingleItem ? "single-item-container" : "blogs-list-container"
+        }`}
       >
         {!loading ? (
           blogs?.map((blog) => (
             <div
               key={blog._id}
-              style={{
-                width: "100%",
-                border: "2px solid black",
-                display: "flex",
-                textAlign: "center",
-                borderRadius: "10px",
-              }}
+              className={`blog-card ${isSingleItem ? "single-item" : ""}`}
             >
               <Link to={`/blogDetail/${blog._id}`}>
-                {" "}
                 <img
                   src={blog.imageUrl}
-                  style={{ height: "260px", width: "370px" }}
-                />{" "}
+                  alt={blog.title}
+                  className="blog-image"
+                />
               </Link>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                }}
-              >
+              <div className="blog-info">
                 <h3> Title :{blog.title}</h3>
                 <p>Type: {blog.type}</p>
                 <p>{blog.content}</p>
                 <p>Author: {blog.auth_email}</p>
 
-                <div align="right">
+                <div className="button-container" align="right">
                   <Link to={`/blogDetail/${blog._id}`}>
-                    {" "}
-                    <button style={{ margin: "10px" }}>
-                      {" "}
-                      Edit{" "}
+                    <button className="edit-btn">
+                      Edit
                       <img
                         src="https://cdn3.iconfinder.com/data/icons/feather-5/24/edit-512.png"
-                        style={{ width: "20px" }}
-                      />{" "}
-                    </button>{" "}
+                        alt="edit icon"
+                        className="icon-edit"
+                      />
+                    </button>
                   </Link>
                   <button
-                    style={{ margin: "10px" }}
+                    className="delete-btn"
                     onClick={() => {
                       handleDelete(blog._id);
                     }}
                   >
-                    Delete{" "}
+                    Delete
                     <img
                       src="https://cdn-icons-png.flaticon.com/512/3687/3687412.png"
-                      style={{ width: "20px" }}
+                      alt="delete icon"
+                      className="icon-delete"
                     />
                   </button>
                 </div>
@@ -180,13 +171,16 @@ const Blogs = () => {
           <img
             src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1260.gif"
             alt="load"
-            style={{ width: "250px" }}
+            className="loader"
           />
         )}
 
-        {blogs?.length === 0 ? (
-          <div style={{ width: "600px", margin: "auto" }}>
-            <img src="https://cdn.dribbble.com/users/95510/screenshots/1694572/no-chat_gif.gif" />
+        {blogs?.length === 0 && !loading ? (
+          <div className="no-blog">
+            <img
+              src="https://cdn.dribbble.com/users/95510/screenshots/1694572/no-chat_gif.gif"
+              alt="no blogs"
+            />
           </div>
         ) : (
           ""

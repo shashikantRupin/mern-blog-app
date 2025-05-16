@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./detail.css";
+import "../styles/blogsDetail.css";
 import { AuthContext } from "./AuthContext";
 import { baseURL } from "../api";
-// import { Link } from 'react-router-dom';
+
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { token, confirmAction } = useContext(AuthContext);
+
   const [blog, setBlog] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
@@ -16,6 +18,9 @@ const BlogDetail = () => {
     type: "",
     imageUrl: "",
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const fetchBlog = async () => {
     try {
       const response = await axios.get(`${baseURL}/blogs/${id}`, {
@@ -30,31 +35,30 @@ const BlogDetail = () => {
         type: response.data[0].type,
         imageUrl: response.data[0].imageUrl,
       });
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching blog detail:", error);
+      setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchBlog();
-  }, [id, token]);
+  }, [id]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.put(`${baseURL}/blogs/update/${id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      fetchBlog()
       alert("Blog updated successfully");
+      setIsEditing(false);
+      fetchBlog();
     } catch (error) {
       console.error("Error updating blog:", error);
     }
@@ -63,147 +67,107 @@ const BlogDetail = () => {
   const handleDelete = async () => {
     try {
       await axios.delete(`${baseURL}/blogs/delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      fetchBlog()
       alert("Blog deleted");
-
+      navigate("/myBlogs");
     } catch (error) {
       console.error("Error deleting blog:", error);
     }
   };
 
-  if (!blog) {
+  const handleFormEdit=()=>{
+    setIsEditing(true);
+  }
+
+  if (loading) {
     return (
-      <img
-        src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1260.gif"
-        alt="loading"
-        style={{ width: "250px" }}
-      />
+      <div className="loading-container">
+        <img
+          src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1260.gif"
+          alt="loading"
+        />
+      </div>
     );
+  }
+
+  if (!blog) {
+    return <div className="no-blog">No blog found.</div>;
   }
 
   return (
     <>
-      <div
-        style={{
-          width: "90%",
-          margin: "auto",
-          borderRadius: " 15px",
-          border: "2px solid black",
-          marginTop: "20px",
-        }}
-      >
-        <div>
-          <img
-            src={blog.imageUrl}
-            style={{ height: "400px" }}
-            alt="Blog cover"
-          />
-        </div>
+      <div className="blog-detail">
+        <img src={blog.imageUrl} alt="Blog Cover" className="blog-image" />
+        <h2>{blog.title}</h2>
+        <p>{blog.content}</p>
+        <p>
+          <strong>Author:</strong> {blog.auth_email}
+        </p>
 
-        <h2>title: {blog.title}</h2>
-        <p> {blog.content}</p>
-        <p>Author: {blog.auth_email}</p>
-
-        <div align="right">
-          <a href="#update">
-            <button style={{ margin: "10px" }}>
-              {" "}
-              Edit{" "}
-              <img
-                src="https://cdn3.iconfinder.com/data/icons/feather-5/24/edit-512.png"
-                style={{ width: "20px" }}
-              />{" "}
-            </button>{" "}
-          </a>
-          <button
-            style={{ margin: "10px" }}
-            onClick={() => {
-              handleDelete(blog._id);
-            }}
-          >
+        <div className="button-group">
+          <button onClick={handleFormEdit}>
+            Edit{" "}
+            <img
+              src="https://cdn3.iconfinder.com/data/icons/feather-5/24/edit-512.png"
+              alt="edit"
+              className="icon"
+            />
+          </button>
+          <button onClick={handleDelete}>
             Delete{" "}
             <img
               src="https://cdn-icons-png.flaticon.com/512/3687/3687412.png"
-              style={{ width: "20px" }}
+              alt="delete"
+              className="icon"
             />
           </button>
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          rowGap: "20px",
-          boxShadow:
-            "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset",
-          width: "90%",
-          margin: "auto",
-          marginTop: "100px",
-          padding: "20px",
-        }}
-        id="update"
-      >
-        {" "}
-        <h2>Update Blog</h2>
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            rowGap: "20px",
-            width: "100%",
-          }}
-        >
-          <label>
-            Title: <br />
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            Content:
-            <br />
-            <textarea
-              name="content"
-              value={formData.content}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            Type:
-            <br />
-            <input
-              type="text"
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label>
-            Image URL:
-            <br />
-            <input
-              type="text"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-            />
-          </label>
-
-          <div>
-            <button type="submit">Update Blog</button>
-          </div>
-        </form>
-      </div>
+      {isEditing && (
+        <div className="edit-form" id="update">
+          <h2>Update Blog</h2>
+          <form onSubmit={handleSubmit}>
+            <label>
+              Title:
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Content:
+              <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Type:
+              <input
+                type="text"
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Image URL:
+              <input
+                type="text"
+                name="imageUrl"
+                value={formData.imageUrl}
+                onChange={handleChange}
+              />
+            </label>
+            <button type="submit" className="update-blog-btn">Update Blog</button>
+          </form>
+        </div>
+      )}
     </>
   );
 };

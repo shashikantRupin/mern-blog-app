@@ -3,6 +3,7 @@ import "../styles/create.css";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import { baseURL } from "../api";
+import { useNavigate } from "react-router-dom";
 
 const CreateBlog = () => {
   const { token } = useContext(AuthContext);
@@ -11,11 +12,11 @@ const CreateBlog = () => {
   const [type, setType] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
+  const navigate=useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = { title, content, type, imageUrl };
-
     try {
       const response = await axios.post(`${baseURL}/blogs/create`, formData, {
         headers: {
@@ -23,11 +24,17 @@ const CreateBlog = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
-      setTitle("");
-      setContent("");
-      setType("");
-      setImageUrl("");
+      console.log("response", response);
+      if (response.status === 201 || response.status === 200) {
+        alert("Blog created successfully!");
+        setTitle("");
+        setContent("");
+        setType("");
+        setImageUrl("");
+        navigate("/myBlogs");
+      } else {
+        alert("Unexpected response from the server.");
+      }
     } catch (error) {
       console.error("Error creating blog:", error);
     }

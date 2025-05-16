@@ -86,7 +86,7 @@ const Home = () => {
     <>
       <section className="home" id="home">
         <div className="home-text container">
-          <h2 className="home-title">Loe Blogger</h2>
+          <h2 className="home-title">Meet the Blogger</h2>
           <span className="home-subtitle">Your source of great content</span>
         </div>
       </section>

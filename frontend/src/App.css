@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  width: 100%;
+  margin: auto;
 }
 
 .App-logo {
@@ -35,4 +37,71 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* confirm alert popup custom css */
+/* custom-confirm-alert.css */
+
+.react-confirm-alert-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  /* backdrop-filter: blur(5px); */
+  z-index: 9999; /* Ensure the overlay is on top */
+}
+
+.react-confirm-alert {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.react-confirm-alert-body {
+  width: 400px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.react-confirm-alert-body h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+.react-confirm-alert-body p {
+  font-size: 16px;
+  margin-bottom: 30px;
+  color: #666666;
+}
+
+.react-confirm-alert-button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.react-confirm-alert-button-group button {
+  width: 45%;
+  padding: 10px 0;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.react-confirm-alert-button-group button:first-child {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.react-confirm-alert-button-group button:first-child:hover {
+  background-color: #45a049;
+}
+
+.react-confirm-alert-button-group button:last-child {
+  background-color: #f44336;
+  color: white;
+}
+
+.react-confirm-alert-button-group button:last-child:hover {
+  background-color: #da190b;
 }
