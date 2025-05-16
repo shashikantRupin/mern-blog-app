@@ -1,19 +1,27 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "../styles/Nav.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { loggedIn, setLoggedIn, setToken, user } = useContext(AuthContext);
+  const { loggedIn, setLoggedIn, setToken, user,setUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
   const handleLogout = () => {
     setLoggedIn(false);
     setToken("");
     localStorage.removeItem("token");
     navigate("/login");
   };
+  useEffect(()=>{
+    // console.log("user-123",user);
+    // console.log("logged-123",loggedIn);
+    if(loggedIn){
+     let userInfo= JSON.parse(localStorage.getItem("name"));
+    //  console.log("userinfo234",userInfo);
+     setUser(userInfo);
+    }
+  },[loggedIn])
 
   return (
     <nav>
@@ -53,7 +61,7 @@ const Navbar = () => {
         {loggedIn ? (
           <>
             <span style={{ marginRight: "15px", fontWeight: "bold" }}>
-              👤 {user.name || user.email}
+              👤 {user.email}
             </span>
             <button
               onClick={handleLogout}

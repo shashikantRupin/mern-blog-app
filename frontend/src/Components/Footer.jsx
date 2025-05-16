@@ -13,7 +13,7 @@ const Footer =()=>{
               expedita tempora praesentium at iure fugiat ea, quam laborum
               aperiam veritatis.
             </p>
-            <ul className="sci">
+            <ul className="link-container">
               <li>
                 <a
                   href="https://www.linkedin.com/in/rupin-raj-d98/"

@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import "../styles/footer.css";
+import "../styles/home.css";
 import { AuthContext } from "./AuthContext";
 import { Link } from "react-router-dom";
 import img1 from "../images/img1.jpg";
+import img2 from "../images/img2.jpg";
+import img3 from "../images/img3.jpg";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 const staticBlogs = [
@@ -18,7 +20,7 @@ const staticBlogs = [
   },
   {
     _id: "static2",
-    imageUrl: img1,
+    imageUrl: img2,
     type: "Food",
     title: "UI Design Tips for Chefs",
     date: "10 Mar 2022",
@@ -27,7 +29,7 @@ const staticBlogs = [
   },
   {
     _id: "static3",
-    imageUrl: img1,
+    imageUrl: img3,
     type: "News",
     title: "Designing for Accessibility",
     date: "05 Jan 2022",
@@ -184,7 +186,7 @@ const Home = () => {
             </div>
           ))
         ) : (
-          <img
+         loggedIn && <img
             src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1260.gif"
             alt="load"
             style={{ width: "250px" }}

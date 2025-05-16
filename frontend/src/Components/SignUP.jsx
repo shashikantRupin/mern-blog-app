@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../styles/login.css";
 import { NavLink } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 const Signup = () => {
@@ -10,7 +11,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
-
+  const [loader, setLoader] = useState(false);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -18,34 +19,17 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoader(true);
       const response = await axios.post(`${baseURL}/signup`, formData);
-      console.log(response.data);
+      // console.log(response.data);
       setFormData({ name: "", email: "", password: "" });
+      setLoader(false);
     } catch (error) {
       console.error("Error signing up:", error);
     }
   };
 
   return (
-    // <div>
-    //   <h2>Signup</h2>
-    //   <form onSubmit={handleSubmit}>
-    //     <div>
-    //       <label>Name:</label>
-    //       <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-    //     </div>
-    //     <div>
-    //       <label>Email:</label>
-    //       <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-    //     </div>
-    //     <div>
-    //       <label>Password:</label>
-    //       <input type="password" name="password" value={formData.password} onChange={handleChange} required />
-    //     </div>
-    //     <button type="submit">Signup</button>
-    //   </form>
-    // </div>
-
     <div
       style={{
         backgroundImage:
@@ -106,8 +90,8 @@ const Signup = () => {
             <a href="#">Forgot Password</a>
           </div>
 
-          <button type="submit" class="btn">
-            Sign UP
+          <button type="submit" class="btn" disabled={loader}>
+            {!loader ? "Sign UP" : <CircularProgress size={25} />}
           </button>
 
           {/* <div class="register-link">

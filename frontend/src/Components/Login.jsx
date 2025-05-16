@@ -3,6 +3,7 @@ import axios from "axios";
 import "../styles/login.css";
 import { AuthContext } from "./AuthContext";
 import { NavLink, useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 const Login = () => {
@@ -11,6 +12,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const[loader,setLoader]=useState(false);
   const navigate=useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,12 +22,15 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoader(false);
       const response = await axios.post(`${baseURL}/login`, formData);
       const { token, name } = response.data;
-
+      setLoader(true);
       setToken(token);
       setLoggedIn(true);
-      setUser({ name: name || formData.email });
+      console.log("response.data-123", response);
+      setUser({ name:formData.email });
+      localStorage.setItem("name", JSON.stringify({email:formData.email}));
 
       navigate("/"); // redirect to homepage
     } catch (error) {
@@ -86,8 +91,12 @@ const Login = () => {
             <a href="#">Forgot Password</a>
           </div>
 
-          <button type="submit" class="btn">
-            Login
+          <button type="submit" className="btn" disabled={loader}>
+            {loader ? (
+              <CircularProgress size={25} />
+            ) : (
+              "Login"
+            )}
           </button>
 
           <div class="register-link">

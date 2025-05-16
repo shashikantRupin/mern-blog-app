@@ -1,0 +1,59 @@
+.post-box{
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+}
+.home{
+      width: 100%;
+      min-height: 440px;
+      background: url("https://images.unsplash.com/photo-1432821596592-e2c18b78144f?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmxvZyUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D");
+      background-size: cover;
+     /* overflow: hidden; */
+      display: grid;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  .home-text{
+      color: var(--bg-color);
+      text-align: center;
+  }
+  
+  .home-title{
+      font-size: 3.5rem;
+  }
+  
+  .home-subtitle{
+      font-size: 1rem;
+      font-weight: 400;
+  }
+  
+  
+  .about{
+      position: relative;
+      width: 100%;
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  .about .contentBx{
+      max-width: 50%;
+      width: 50%;
+      text-align: left;
+      padding-right: 40px;
+  }
+  
+  .titleText{
+      font-weight: 600;
+      color: #111;
+      font-size: 2rem;
+      margin-bottom: 10px;
+  }
+  
+  .title-text{
+      color: #111;
+      font-size: 1em;
+  }
+  
