@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
-import { baseURL } from "../api";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 const Blogs = () => {
   const { token } = useContext(AuthContext);

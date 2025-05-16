@@ -3,7 +3,7 @@ import axios from "axios";
 import "../styles/login.css";
 import { AuthContext } from "./AuthContext";
 import { NavLink, useNavigate } from "react-router-dom";
-import { baseURL } from "../api";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 const Login = () => {
   const { setLoggedIn, setToken, setUser } = useContext(AuthContext);

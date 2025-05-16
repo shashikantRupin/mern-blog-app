@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
-import { baseURL } from "../api";
 import "../styles/myBlog.css"; 
 import { confirmAlert } from "react-confirm-alert";
 
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 const Blogs = () => {
   const { token } = useContext(AuthContext);

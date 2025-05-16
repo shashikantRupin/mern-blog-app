@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 import "../styles/create.css";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
-import { baseURL } from "../api";
 import { useNavigate } from "react-router-dom";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 const CreateBlog = () => {
   const { token } = useContext(AuthContext);

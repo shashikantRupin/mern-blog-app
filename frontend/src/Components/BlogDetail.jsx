@@ -3,8 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/blogsDetail.css";
 import { AuthContext } from "./AuthContext";
-import { baseURL } from "../api";
 
+
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 const BlogDetail = () => {
   const { id } = useParams();

@@ -3,8 +3,8 @@ import axios from "axios";
 import "../styles/footer.css";
 import { AuthContext } from "./AuthContext";
 import { Link } from "react-router-dom";
-import { baseURL } from "../api";
 import img1 from "../images/img1.jpg";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 const staticBlogs = [
   {
