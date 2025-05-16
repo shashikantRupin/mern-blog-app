@@ -194,9 +194,9 @@ const Home = () => {
         {/* Static blogs shown after dynamic blogs */}
         {staticBlogs?.map((blog) => (
           <div className="post-box" key={blog._id}>
-            <Link to={`/blogDetail/${blog._id}`}>
+            {/* <Link to={`/blogDetail/${blog._id}`}> */}
               <img src={blog.imageUrl} alt="static" className="post-img" />
-            </Link>
+            {/* </Link> */}
             <h2 className="category">{blog.type}</h2>
             <h3 className="post-title">{blog.title}</h3>
             <span className="post-date">{blog.date}</span>

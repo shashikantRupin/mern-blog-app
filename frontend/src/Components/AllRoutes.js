@@ -45,8 +45,8 @@ const AllRoutes = () => {
       />
 
       {/* Optional routes (uncomment if needed) */}
-      {/* <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} /> */}
+      <Route path="/about" element={<About />} />
+      {/* <Route path="/contact" element={<Contact />} /> */}
     </Routes>
   );
 };
