@@ -4,6 +4,7 @@ import "../styles/login.css";
 import { AuthContext } from "./AuthContext";
 import { NavLink, useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
+
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 const Login = () => {
@@ -12,54 +13,42 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const[loader,setLoader]=useState(false);
-  const navigate=useNavigate();
+  const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // inside handleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoader(false);
+      setLoader(true);
       const response = await axios.post(`${baseURL}/login`, formData);
       const { token, name } = response.data;
-      setLoader(true);
       setToken(token);
       setLoggedIn(true);
-      // console.log("response.data-123", response);
-      setUser({ name:formData.email });
-      localStorage.setItem("name", JSON.stringify({email:formData.email}));
-
+      setUser({ name: formData.email });
+      localStorage.setItem("name", JSON.stringify({ email: formData.email }));
       navigate("/"); // redirect to homepage
     } catch (error) {
       console.error("Error logging in:", error);
+      setLoader(false);
     }
   };
 
   return (
     <div
+      className="login-container"
       style={{
-        backgroundImage:
-          "url('https://i.makeagif.com/media/2-24-2021/JT4fO9.gif')",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        width: "100%",
-        height: "800px",
-        display: "flex",
-        marginBottom: "-140px",
-        imageRendering: "auto",
-        backfaceVisibility: "hidden",
-        transform: "translateZ(0)",
+        backgroundImage: `url(https://images.pexels.com/photos/733856/pexels-photo-733856.jpeg?auto=compress&cs=tinysrgb&w=1600)`,
       }}
     >
-      <div class="wrapper">
+      <div className="wrapper">
         <form onSubmit={handleSubmit}>
           <h1>Login</h1>
 
-          <div class="input-box">
+          <div className="input-box">
             <input
               type="email"
               name="email"
@@ -68,10 +57,10 @@ const Login = () => {
               placeholder="Email"
               required
             />
-            <i class="bx bxs-user"></i>
+            <i className="bx bxs-user"></i>
           </div>
 
-          <div class="input-box">
+          <div className="input-box">
             <input
               type="password"
               name="password"
@@ -80,10 +69,10 @@ const Login = () => {
               placeholder="Password"
               required
             />
-            <i class="bx bxs-lock-alt"></i>
+            <i className="bx bxs-lock-alt"></i>
           </div>
 
-          <div class="remember-forgot">
+          <div className="remember-forgot">
             <label>
               <input type="checkbox" />
               Remember Me
@@ -92,19 +81,13 @@ const Login = () => {
           </div>
 
           <button type="submit" className="btn" disabled={loader}>
-            {loader ? (
-              <CircularProgress size={25} />
-            ) : (
-              "Login"
-            )}
+            {loader ? <CircularProgress size={25} /> : "Login"}
           </button>
 
-          <div class="register-link">
+          <div className="register-link">
             <p>
-              Dont have an account?{" "}
-              <NavLink to="/signup" style={{ color: "silver" }}>
-                Register now
-              </NavLink>{" "}
+              Don't have an account?{" "}
+              <NavLink to="/signup">Register now</NavLink>
             </p>
           </div>
         </form>

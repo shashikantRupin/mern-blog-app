@@ -1,4 +1,4 @@
-/* Login Page CSS */
+/* Signup Page CSS */
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +6,7 @@
   font-family: "Poppins", sans-serif;
 }
 
-.login-container {
+.signup-container {
   width: 100%;
   min-height: 100vh;
   background-position: center;
@@ -91,6 +91,7 @@
   color: #000;               
 }
 
+
 .wrapper .remember-forgot {
   display: flex;
   justify-content: space-between;
@@ -151,22 +152,26 @@
   opacity: 0.8;
 }
 
-.wrapper .register-link {
-  font-size: 14.5px;
-  text-align: center;
-  margin: 20px 0 5px;
+/* Additional styles specific to signup */
+.terms-container {
+  margin: 15px 0;
+  font-size: 13px;
+  display: flex;
+  align-items: flex-start;
 }
 
-.register-link p a {
+.terms-container input {
+  margin-right: 8px;
+  margin-top: 3px;
+}
+
+.terms-container a {
   color: #fff;
   text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
 }
 
-.register-link p a:hover {
+.terms-container a:hover {
   text-decoration: underline;
-  color: #f0f0f0;
 }
 
 /* Media Queries for Responsiveness */
@@ -174,24 +179,20 @@
   .wrapper {
     padding: 25px 20px;
   }
-  
+
   .wrapper h1 {
     font-size: 28px;
   }
-  
+
   .input-box input {
     font-size: 14px;
   }
-  
+
   .remember-forgot {
     font-size: 13px;
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-  }
-  
-  .register-link {
-    font-size: 13px;
   }
 }
 
@@ -199,7 +200,7 @@
   .wrapper {
     padding: 20px 15px;
   }
-  
+
   .wrapper h1 {
     font-size: 24px;
   }

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../styles/login.css";
-import { NavLink } from "react-router-dom";
+import "../styles/signup.css";
+import { NavLink, useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
+
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 const Signup = () => {
@@ -12,6 +13,8 @@ const Signup = () => {
     password: "",
   });
   const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -21,44 +24,39 @@ const Signup = () => {
     try {
       setLoader(true);
       const response = await axios.post(`${baseURL}/signup`, formData);
-      // console.log(response.data);
       setFormData({ name: "", email: "", password: "" });
       setLoader(false);
+      navigate("/login"); // redirect to login after successful signup
     } catch (error) {
       console.error("Error signing up:", error);
+      setLoader(false);
     }
   };
 
   return (
     <div
+      className="signup-container"
       style={{
-        backgroundImage:
-          "url('https://steamuserimages-a.akamaihd.net/ugc/840332610283039051/A4997E43ADA6CD046F63AF9B25D358280DD493D7/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false')",
-        backgroundRepeat: "no-repeat",
-        width: "100%",
-        backgroundSize: "cover",
-        height: "800px",
-        display: "flex",
-        marginBottom: "-140px",
+        backgroundImage: `url(https://images.pexels.com/photos/733856/pexels-photo-733856.jpeg?auto=compress&cs=tinysrgb&w=1600)`,
       }}
     >
-      <div class="wrapper">
+      <div className="wrapper">
         <form onSubmit={handleSubmit}>
           <h1>Sign Up</h1>
 
-          <div class="input-box">
+          <div className="input-box">
             <input
-              type="name"
+              type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="name"
+              placeholder="Full Name"
               required
             />
-            <i class="bx bxs-user"></i>
+            <i className="bx bxs-user"></i>
           </div>
 
-          <div class="input-box">
+          <div className="input-box">
             <input
               type="email"
               name="email"
@@ -67,10 +65,10 @@ const Signup = () => {
               placeholder="Email"
               required
             />
-            <i class="bx bxs-user"></i>
+            <i className="bx bxs-envelope"></i>
           </div>
 
-          <div class="input-box">
+          <div className="input-box">
             <input
               type="password"
               name="password"
@@ -79,25 +77,26 @@ const Signup = () => {
               placeholder="Password"
               required
             />
-            <i class="bx bxs-lock-alt"></i>
+            <i className="bx bxs-lock-alt"></i>
           </div>
 
-          <div class="remember-forgot">
-            <label>
-              <input type="checkbox" />
-              Remember Me
+          <div className="terms-container">
+            <input type="checkbox" id="terms" required />
+            <label htmlFor="terms">
+              I agree to the <a href="#">Terms of Service</a> and{" "}
+              <a href="#">Privacy Policy</a>
             </label>
-            <a href="#">Forgot Password</a>
           </div>
 
-          <button type="submit" class="btn" disabled={loader}>
-            {!loader ? "Sign UP" : <CircularProgress size={25} />}
+          <button type="submit" className="btn" disabled={loader}>
+            {!loader ? "Sign Up" : <CircularProgress size={25} />}
           </button>
 
-          {/* <div class="register-link">
-        <p>Dont have an account?  <NavLink to="/signup" style={{color :'silver'}}>Register now</NavLink> </p>
-
-      </div> */}
+          <div className="register-link">
+            <p>
+              Already have an account? <NavLink to="/login">Login</NavLink>
+            </p>
+          </div>
         </form>
       </div>
     </div>
