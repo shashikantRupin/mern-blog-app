@@ -61,7 +61,7 @@ const Navbar = () => {
         {loggedIn ? (
           <>
             <span style={{ marginRight: "15px", fontWeight: "bold" }}>
-              👤 {user.email}
+              👤 {user?.email}
             </span>
             <button
               onClick={handleLogout}
