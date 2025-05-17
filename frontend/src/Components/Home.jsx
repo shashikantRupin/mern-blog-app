@@ -43,7 +43,7 @@ const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState("");
-  const { loggedIn } = useContext(AuthContext);
+  const { loggedIn, getTime } = useContext(AuthContext);
 
   const fetchBlogs = async (type) => {
     setLoading(true);
@@ -55,7 +55,7 @@ const Home = () => {
       });
       console.log("resData", response.data);
       setBlogs(response?.data);
-      console.log(response?.data);
+      // console.log(response?.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
@@ -162,42 +162,44 @@ const Home = () => {
 
       <div className="post container">
         {/* API blogs come first */}
-        {blogs.length !== 0 ? (
-          blogs?.map((blog) => (
-            <div className="post-box" key={blog._id}>
-              <Link to={`/blogDetail/${blog._id}`}>
-                <img src={blog.imageUrl} alt="dynamic" className="post-img" />
-              </Link>
-              <h2 className="category">{blog.type}</h2>
-              <h3 className="post-title">{blog.title}</h3>
-              <span className="post-date">{blog.date}</span>
-              <p className="post-description">{blog.description}</p>
-              <div className="profile">
-                <img
-                  src={
-                    blog.authorImage ||
-                    "https://pics.craiyon.com/2023-07-15/32c89c16131e490ab3536dc2e91bccb3.webp"
-                  }
-                  alt="profile"
-                  className="profile-img"
-                />
-                <span className="profile-name">{blog.author || "Unknown"}</span>
+        {blogs.length !== 0
+          ? blogs?.map((blog) => (
+              <div className="post-box" key={blog._id}>
+                <Link to={`/blogDetail/${blog._id}`}>
+                  <img src={blog.imageUrl} alt="dynamic" className="post-img" />
+                </Link>
+                <h2 className="category">{blog.type}</h2>
+                <h3 className="post-title">{blog.title}</h3>
+                <span className="post-date">{getTime(blog?.createdAt)}</span>
+                <p className="post-description">{blog.description}</p>
+                <div className="profile">
+                  <img
+                    src={
+                      blog.authorImage ||
+                      "https://pics.craiyon.com/2023-07-15/32c89c16131e490ab3536dc2e91bccb3.webp"
+                    }
+                    alt="profile"
+                    className="profile-img"
+                  />
+                  <span className="profile-name">
+                    {blog.author || "Unknown"}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-         loggedIn && <img
-            src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1260.gif"
-            alt="load"
-            style={{ width: "250px" }}
-          />
-        )}
+            ))
+          : loggedIn && (
+              <img
+                src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1260.gif"
+                alt="load"
+                style={{ width: "250px" }}
+              />
+            )}
 
         {/* Static blogs shown after dynamic blogs */}
         {staticBlogs?.map((blog) => (
           <div className="post-box" key={blog._id}>
             {/* <Link to={`/blogDetail/${blog._id}`}> */}
-              <img src={blog.imageUrl} alt="static" className="post-img" />
+            <img src={blog.imageUrl} alt="static" className="post-img" />
             {/* </Link> */}
             <h2 className="category">{blog.type}</h2>
             <h3 className="post-title">{blog.title}</h3>

@@ -24,7 +24,7 @@ const Blogs = () => {
       });
 
       setBlogs(response?.data);
-      console.log(response?.data);
+      // console.log(response?.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
@@ -79,7 +79,6 @@ const Blogs = () => {
   
   const isSingleItem = blogs.length === 1;
 
-  
   return (
     <div>
       <div className="post-filter container">

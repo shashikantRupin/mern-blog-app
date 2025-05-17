@@ -5,10 +5,10 @@ import { AuthContext } from "./AuthContext";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 const Blogs = () => {
-  const { token } = useContext(AuthContext);
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState("");
+  const { token ,getTime} = useContext(AuthContext);
 
   const fetchBlogs = async (type) => {
     setLoading(true);
@@ -20,7 +20,7 @@ const Blogs = () => {
       });
 
       setBlogs(response?.data);
-      console.log(response?.data);
+      // console.log(response?.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
@@ -46,6 +46,13 @@ const Blogs = () => {
   const onlyNews = () => {
     setType("news");
   };
+
+ 
+
+  // Example usage:
+  console.log("123date",getTime("2025-05-17T04:36:03")); // Output: "17th May 2025"
+
+  
 
   return (
     <div>
@@ -109,7 +116,7 @@ const Blogs = () => {
               <Link to={`/blogDetail/${blog._id}`}>
                 <h3 className="post-title">{blog.title}</h3>
               </Link>
-              <span className="post-date">2 Feb 2024</span>
+              <span className="post-date">{getTime(blog?.createdAt)}</span>
               <p className="post-description">
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                 Consectetur, similique, rerum excepturi harum, vitae facilis

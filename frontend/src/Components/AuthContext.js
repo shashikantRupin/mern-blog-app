@@ -26,6 +26,29 @@ const AuthProvider = ({ children }) => {
       });
     });
   };
+  const getTime = (createdAt = "2025-01-01T04:36:03") => {
+    const dateObj = new Date(createdAt);
+
+    const day = dateObj.getDate();
+    const month = dateObj.toLocaleString("default", { month: "long" });
+    const year = dateObj.getFullYear();
+
+    const getOrdinalSuffix = (day) => {
+      if (day > 3 && day < 21) return `${day}th`;
+      switch (day % 10) {
+        case 1:
+          return `${day}st`;
+        case 2:
+          return `${day}nd`;
+        case 3:
+          return `${day}rd`;
+        default:
+          return `${day}th`;
+      }
+    };
+
+    return `${getOrdinalSuffix(day)} ${month} ${year}`;
+  };
   useEffect(() => {
     // Check if token exists in localStorage
     const storedToken = localStorage.getItem('token');
@@ -49,6 +72,7 @@ const AuthProvider = ({ children }) => {
         user,
         setUser,
         confirmAction,
+        getTime,
       }}
     >
       {children}

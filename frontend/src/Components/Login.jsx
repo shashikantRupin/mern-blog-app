@@ -28,7 +28,7 @@ const Login = () => {
       setLoader(true);
       setToken(token);
       setLoggedIn(true);
-      console.log("response.data-123", response);
+      // console.log("response.data-123", response);
       setUser({ name:formData.email });
       localStorage.setItem("name", JSON.stringify({email:formData.email}));
 

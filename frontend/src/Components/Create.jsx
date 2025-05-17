@@ -24,7 +24,7 @@ const CreateBlog = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response", response);
+      // console.log("response", response);
       if (response.status === 201 || response.status === 200) {
         alert("Blog created successfully!");
         setTitle("");
