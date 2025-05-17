@@ -7,6 +7,7 @@ const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState(() => localStorage.getItem('token') || '');
   const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
   
   const confirmAction = (title, message) => {
     return new Promise((resolve) => {
@@ -56,6 +57,7 @@ const AuthProvider = ({ children }) => {
       setToken(storedToken);
       setLoggedIn(true);
     }
+    setLoading(false);
   }, []);
  
   useEffect(() => {
@@ -73,6 +75,7 @@ const AuthProvider = ({ children }) => {
         setUser,
         confirmAction,
         getTime,
+        loading,
       }}
     >
       {children}

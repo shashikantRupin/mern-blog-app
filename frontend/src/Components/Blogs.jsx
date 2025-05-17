@@ -49,9 +49,7 @@ const Blogs = () => {
 
  
 
-  // Example usage:
-  console.log("123date",getTime("2025-05-17T04:36:03")); // Output: "17th May 2025"
-
+  
   
 
   return (
