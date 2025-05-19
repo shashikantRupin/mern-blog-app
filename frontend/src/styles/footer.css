@@ -228,7 +228,7 @@ header.shadow .logo{
     font-weight: 600;
     color: var(--text-color);
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+  
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -246,7 +246,6 @@ header.shadow .logo{
     line-height: 1.5rem;
     margin: 5px 0 10px;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -501,9 +500,12 @@ footer p{
     .header-img{
         height: 340px;
     }
+    .contactBx .info li a{
+        font-size: 13px;
+    }
 }
 
-@media (max-width: 396px){
+@media all and (max-width: 396px){
     .home-title{
         font-size: 2rem;
     }
@@ -535,10 +537,13 @@ footer p{
     .header-img{
         height: 340px;
     }
+    .contactBx .info li a{
+        font-size: 13px;
+    }
 }
 
 /* Footer Media Query */
-@media (max-width: 991px){
+@media all and (max-width: 991px){
     footer{
         padding: 40px;
         font-size: 20px;

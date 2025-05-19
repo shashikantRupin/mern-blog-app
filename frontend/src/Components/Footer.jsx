@@ -71,7 +71,7 @@ const Footer =()=>{
                   <i className="bx bx-envelope"></i>
                 </span>
                 <p>
-                  <a href="vivekverma4679@gmail.com">
+                  <a href="vivekverma4679@gmail.com" className="email">
                     shashikantrupin123@gmail.com
                   </a>
                 </p>

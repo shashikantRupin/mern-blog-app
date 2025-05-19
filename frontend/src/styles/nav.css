@@ -136,7 +136,8 @@ nav .menu span {
   /* Utility classes for spacing */
   .nav-list {
     gap: 20px;
-    padding: 10px;
+    /* padding: 10px; */
+    /* border: 1px solid red !important; */
   }
 
   .login-logout {
@@ -152,6 +153,7 @@ nav .menu span {
   /* When JS toggles .open, show the list */
   nav ul.open {
     display: flex;
+    /* border: 1px solid red; */
   }
 
   /* Mobile link style */
