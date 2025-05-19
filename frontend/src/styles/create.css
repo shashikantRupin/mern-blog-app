@@ -3,29 +3,40 @@
     background-repeat: no-repeat;
     background-size: cover;
     height: 600px;
+    width: 100%;
     /* padding: 20px; */
     margin-bottom: -100px;
+    /* border: 1px solid red; */
+    box-sizing: border-box;
   }
   
-  .form-container h2 {
+  .create-blog-header {
     text-align: center;
     color: #fff;
+    /* margin: 10px; */
+    padding: 1rem;
+    /* border: 1px solid red; */
   }
   
-  .form-container form {
+  .form-element {
     width: 400px;
-    margin: auto;
+    margin:10px 150px 40px;
     display: flex;
+    
     flex-direction: column;
     background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 10px;
+    /* border: 1px solid green; */
+
   }
   .form-container div input {
     width: 100%;
+    box-sizing: border-box;
   }
   .form-container div textarea {
     width: 100%;
+    box-sizing: border-box;
   }
   
   .form-container label {
@@ -40,6 +51,7 @@
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    box-sizing: border-box;
   }
   
   .form-container button[type="submit"] {
@@ -53,9 +65,24 @@
     line-height: 25px;
     outline: none;
     cursor: pointer;
+    box-sizing: border-box;
   }
   
   .form-container button[type="submit"]:hover {
     opacity: 0.8;
   }
   
+  @media all and (max-width: 700px){
+   
+    .form-element {
+      width: 320px ;
+      box-sizing: border-box;
+      margin:10px auto;
+      display: flex;
+      flex-direction: column;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid green !important;
+    }
+  }

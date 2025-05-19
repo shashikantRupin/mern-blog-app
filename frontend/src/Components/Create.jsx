@@ -42,17 +42,10 @@ const CreateBlog = () => {
 
   return (
     <div className="form-container">
-      <h2 style={{ color: "black" }}>Create Blog</h2>
+      <h2 className="create-blog-header">Create Blog</h2>
       <form
         onSubmit={handleSubmit}
-        style={{
-          width: "500px",
-          margin: "auto",
-          display: "flex",
-          flexDirection: "column",
-          marginLeft: "200px",
-          marginTop: "50px",
-        }}
+        className="form-element"
       >
         <h2 style={{ color: "black" }}>Write Your Blog</h2>
         <div>

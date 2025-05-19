@@ -16,7 +16,6 @@ function App() {
    <Navbar/> 
      <AllRoutes/>      
     <Footer/>
-
     </div>
     </AuthProvider>
     </BrowserRouter>
