@@ -1,18 +1,28 @@
-.active {
-  background-color: rgb(39, 160, 181);
+
+:root {
+  --navbar-bg: #f5f7fa;                
+  --navbar-text: #032438;              
+  --navbar-accent: rgb(52, 112, 228);  
 }
 
+.active {
+  color: var(--navbar-accent) !important;
+}
+
+/* ── Top‑level nav bar ── */
 nav {
   z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #032438;
-  color: white;
   position: sticky;
   top: 0;
-  padding: -10px;
-  /* border: 1px solid red; */
+  box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+
+  background-color: var(--navbar-bg);
+  color: var(--navbar-text);
+
+  padding: 0.5rem 1rem;
 }
 
 .title-link-wrapper {
@@ -21,111 +31,158 @@ nav {
   align-items: center;
 }
 
+/* Brand / logo text */
 nav .title {
   font-size: 1.2rem;
-  /* margin: rem; */
   font-weight: bold;
   text-decoration: none;
-  color: white;
+  color: var(--navbar-text);
 }
 
+/* Desktop menu list */
 nav ul {
   display: flex;
-  /* border: 1px solid red; */
 }
 
+/* Each list item */
 nav ul li {
   list-style: none;
 }
 
+/* Anchor links (desktop) */
 nav ul li a {
   display: block;
   text-decoration: none;
-  color: white;
+  color: var(--navbar-text);
   padding: 0.5rem;
   margin: 0 0.5rem;
   border-radius: 0.5rem;
+  background: none;                 /* remove colored box */
+  transition: color 0.2s ease;
 }
 
+/* Hover – no bg, just accent text */
 nav ul li a:not(.active):hover {
-  background-color: #172554;
+  background: none;
+  color: var(--navbar-accent);
 }
 
+/* ── Burger menu icon (hidden on desktop) ── */
 nav .menu {
   display: none;
   position: absolute;
-  top: 0.75rem;
+  top: 1rem;
   right: 0.5rem;
   flex-direction: column;
   justify-content: space-between;
-  width: 2.25rem;
+  width: 1.75rem;
   height: 2rem;
 }
 
 nav .menu span {
   height: 0.4rem;
   width: 100%;
-  background-color: #fff;
+  background-color: var(--navbar-text); /* visible on light bg */
   border-radius: 0.2rem;
 }
 
+.logout-btn {
+  width: 100px;
+  background-color: none;
+  color: var(--navbar-accent);
+  border: none;
+  background: none;
+}
+
+/* ──────────────────────────────────────────
+   Responsive (≤ 700 px)
+   ────────────────────────────────────────── */
 @media (max-width: 700px) {
+  /* Show burger */
   nav .menu {
     display: flex;
   }
 
+  /* Stack layout */
   nav {
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
     padding-bottom: 20px;
-    /* border: 1px solid orange; */
   }
-  .title-link-wrapper{
-   flex-direction: row-reverse;
+
+  /* Reverse title + burger order for aesthetics */
+  .title-link-wrapper {
+    flex-direction: row-reverse;
   }
+
+  /* Dropdown list (initially hidden) */
   .title-link-wrapper ul {
     display: none;
     flex-direction: column;
     width: 100%;
     margin-bottom: 0.25rem;
-    background-color: #fff;
-   
-    /* border: 1px solid red; */
+    background-color: var(--navbar-bg);
   }
-  .nav-list{
+
+  /* Utility classes for spacing */
+  .nav-list {
     gap: 20px;
     padding: 10px;
   }
-.login-logout{
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-left: 10px;
-  /* width: 80%; */
-}
-.log-out-btn{
-  width: 100px;
-}
+
+  .login-logout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-left: 10px;
+    /* border: 1px solid red; */
+  }
+
+ 
+
+  /* When JS toggles .open, show the list */
   nav ul.open {
     display: flex;
   }
 
+  /* Mobile link style */
   nav ul li a {
     display: block;
     text-decoration: none;
-    color: #032438;
+    color: var(--navbar-text);
     padding: 0.5rem 1rem;
     margin: 0 0.5rem;
     font-weight: 500;
     border-radius: 0.5rem;
-    transition: background-color 0.2s ease;
+    background: none;
+    transition: color 0.2s ease;
   }
-  
-  nav ul li a:not(.active):hover {
-    background-color: #e0f0f8;
+
+  /* Hover + active on mobile */
+  nav ul li a:not(.active):hover,
+  nav ul li a.active {
+    background: none;
+    color: var(--navbar-accent);
   }
-  .logo-blog{
+
+  /* Hide extra logo image if needed */
+  .logo-blog {
     display: none;
   }
+}
+
+.login-btn, .logout-btn{
+  height: 48px;
+  width: 142px;
+  border-radius: 92px;
+  background-color: #2f2663;
+  color: white;
+  border: 2px solid #2f2663;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  letter-spacing: -0.29px;
+  line-height: 25px;
+  outline: none;
+  cursor: pointer;
 }

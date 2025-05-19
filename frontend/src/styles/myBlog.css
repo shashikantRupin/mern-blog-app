@@ -1,21 +1,15 @@
 
-.post-filter.container {
-      display: flex;
-      gap: 10px;
-      margin: auto;
-      width: 300px;
-      padding: 20px;
-      font-size: 20px;
-      justify-content: space-between;
-      border: 2px solid black;
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-    }
+.filter-box{
+  display: flex;
+  width: 300px;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 20px auto;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  padding: 10px;
+ }
     
-    #active-filter {
-      font-weight: bold;
-      text-decoration: underline;
-    }
     
     .your-blogs-heading {
       text-align: center;
@@ -110,22 +104,19 @@
       padding: 6px 12px;
       border-radius: 5px;
       font-size: 16px;
+      background-color: #2f2663;
+      color: white !important;
+      border: 2px solid #2f2663;
+      font-family: "Poppins", sans-serif;
+      font-size: 16px;
+      letter-spacing: -0.29px;
+      line-height: 25px;
+      outline: none;
+      cursor: pointer;    
       
     }
     
-    .edit-btn {
-      background-color: #007bff;
-      color: white;
-      width: 100px;
-      text-align: center;
-    }
-    .delete-btn {
-      background-color: #dc3545;
-      color: white;
-      width: 100px;
-      text-align: center;
-    }
-    
+   
     .delete-btn:hover {
       background-color: #b02a37;
     }
@@ -135,10 +126,11 @@
       height: 20px !important;
        width: 25px !important;
        box-sizing: border-box;
+       color: #fff;
     }
     
     .edit-btn:hover {
-      background-color: #0056b3;
+      /* background-color: #0056b3; */
     }
     
     

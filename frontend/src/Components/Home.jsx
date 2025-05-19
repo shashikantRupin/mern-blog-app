@@ -95,19 +95,18 @@ const Home = () => {
 
       <section className="about container" id="about">
         <div className="contentBx">
-          <h2 className="titleText">Catch up with the trending topics</h2>
+          <h2 className="titleText">Catch Up With the Trending Topics</h2>
           <p className="title-text">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum eos
-            consequuntur voluptate dolorum totam provident ducimus cupiditate
-            dolore doloribus repellat. Saepe ad fugit similique quis quam. Odio
-            suscipit incidunt distinctio.
+            Dive into the world of ideas, stories, and inspiration. Whether
+            you're into tech, lifestyle, or the latest trends—our blog has
+            something for everyone. We bring you fresh perspectives, expert
+            opinions, and the most talked-about topics that matter.
             <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-            blanditiis libero pariatur ipsum suscipit voluptates aut,
-            repellendus quos dolor autem, natus laboriosam consectetur maxime
-            cumque, sunt magni optio? Veritatis, ea?
+            Join our community of curious readers and discover content that's
+            not only informative but also engaging. From deep insights to fun
+            reads, stay in the loop with what's trending now.
           </p>
-          <a href="/" className="btn2">
+          <a href="/blogs" className="btn2">
             Read more
           </a>
         </div>
@@ -120,16 +119,7 @@ const Home = () => {
         </div>
       </section>
 
-      <div
-        className="post-filter container"
-        style={{
-          display: "flex",
-          gap: "10px",
-          margin: "auto",
-          width: "300px",
-          padding: "20px",
-        }}
-      >
+      <div className="filter-box">
         <span
           className="filter-item"
           onClick={justfetch}

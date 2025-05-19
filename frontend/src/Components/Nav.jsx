@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import "../styles/Nav.css";
+import "../styles/nav.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 
@@ -17,7 +17,7 @@ const Navbar = () => {
     // console.log("user-123",user);
     // console.log("logged-123",loggedIn);
     if(loggedIn){
-     let userInfo= JSON.parse(localStorage.getItem("name"));
+     let userInfo= JSON.parse(localStorage.getItem("email"));
     //  console.log("userinfo234",userInfo);
      setUser(userInfo);
     }
@@ -67,33 +67,19 @@ const Navbar = () => {
               👤 {user?.email}
             </span>
             <button
+              className="logout-btn"
               onClick={handleLogout}
-              className="log-out-btn"
-              style={{
-                padding: "8px 12px",
-                borderRadius: "5px",
-                backgroundColor: "#e74c3c",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-              }}
             >
               Logout
             </button>
           </>
         ) : (
-          <NavLink
-            to="/login"
-            style={{
-              borderRadius: "5px",
-              padding: "10px",
-              backgroundColor: "#3498db",
-              color: "white",
-              textDecoration: "none",
-            }}
+          <button
+            onClick={()=>navigate("/login")}
+           className="login-btn"
           >
             Login
-          </NavLink>
+          </button>
         )}
       </div>
     </nav>

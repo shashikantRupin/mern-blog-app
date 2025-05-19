@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
-const baseURL = process.env.REACT_APP_BASE_URL;
+import "../styles/blogs.css"
 
+const baseURL = process.env.REACT_APP_BASE_URL;
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -54,21 +55,7 @@ const Blogs = () => {
 
   return (
     <div>
-      <div
-        className="post-filter container"
-        style={{
-          display: "flex",
-          gap: "10px",
-          margin: "auto",
-          width: "300px",
-          padding: "20px",
-          fontSize: "20px",
-          justifyContent: "space-between",
-          border: "2px solid black",
-          borderEndStartRadius: "10px",
-          borderEndEndRadius: "10px",
-        }}
-      >
+      <div className="filter-box container">
         <span
           className="filter-item"
           onClick={justfetch}

@@ -28,8 +28,8 @@ const Login = () => {
       const { token, name } = response.data;
       setToken(token);
       setLoggedIn(true);
-      setUser({ name: formData.email });
-      localStorage.setItem("name", JSON.stringify({ email: formData.email }));
+      setUser({ email: formData.email });
+      localStorage.setItem("email", JSON.stringify({ email: formData.email }));
       navigate("/"); // redirect to homepage
     } catch (error) {
       console.error("Error logging in:", error);

@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import "../styles/myBlog.css"; 
 import { confirmAlert } from "react-confirm-alert";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
@@ -12,9 +15,10 @@ const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
+  const[userInfo, setUserInfo]=useState({})
   const { confirmAction } = useContext(AuthContext);
 
-  const fetchBlogs = async (type="") => {
+  const fetchBlogs = async (type="",user) => {
     setLoading(true);
     try {
       const response = await axios.get(`${baseURL}/blogs?type=${type}`, {
@@ -23,8 +27,12 @@ const Blogs = () => {
         },
       });
 
-      setBlogs(response?.data);
-      // console.log(response?.data);
+      // Filter blogs by auth_email matching the logged-in user's email
+      const filteredBlogs = response?.data?.filter(
+        (blog) => blog.auth_email === user?.email
+      );
+      console.log("filteredBlogs123",response?.data);
+      setBlogs(filteredBlogs);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
@@ -32,7 +40,8 @@ const Blogs = () => {
   };
 
   useEffect(() => {
-    fetchBlogs(type);
+    const user = JSON.parse(localStorage.getItem("email"));
+    fetchBlogs(type,user);
   }, [token, type]);
 
   const justfetch = () => {
@@ -81,7 +90,7 @@ const Blogs = () => {
 
   return (
     <div>
-      <div className="post-filter container">
+      <div className="filter-box container">
         <span
           className="filter-item"
           onClick={justfetch}
@@ -142,11 +151,7 @@ const Blogs = () => {
                   <Link to={`/blogDetail/${blog._id}`}>
                     <button className="edit-btn">
                       Edit
-                      <img
-                        src="https://cdn3.iconfinder.com/data/icons/feather-5/24/edit-512.png"
-                        alt="edit icon"
-                        className="icon-edit"
-                      />
+                      <EditIcon className="icon-edit" />
                     </button>
                   </Link>
                   <button
@@ -156,11 +161,7 @@ const Blogs = () => {
                     }}
                   >
                     Delete
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/512/3687/3687412.png"
-                      alt="delete icon"
-                      className="icon-delete"
-                    />
+                    <DeleteIcon className="icon-delete" />
                   </button>
                 </div>
               </div>

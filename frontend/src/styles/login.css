@@ -1,4 +1,9 @@
 /* Login Page CSS */
+:root {
+  --navbar-bg: #f5f7fa;                
+  --navbar-text: #032438;              
+  --navbar-accent: rgb(52, 112, 228);  
+}
 * {
   margin: 0;
   padding: 0;
@@ -204,3 +209,5 @@
     font-size: 24px;
   }
 }
+
+/* rgb(52, 112, 228) */
