@@ -14,6 +14,7 @@ const Login = () => {
     password: "",
   });
   const [loader, setLoader] = useState(false);
+  const[loginError,setLoginError]=useState("")
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -22,20 +23,34 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoginError(""); // clear previous error
     try {
       setLoader(true);
       const response = await axios.post(`${baseURL}/login`, formData);
-      const { token, name } = response.data;
-      setToken(token);
-      setLoggedIn(true);
-      setUser({ email: formData.email });
-      localStorage.setItem("email", JSON.stringify({ email: formData.email }));
-      navigate("/"); // redirect to homepage
+
+      if (response.status === 200 || response.status === 201) {
+        const { token, name } = response.data;
+        setToken(token);
+        setLoggedIn(true);
+        setUser({ email: formData.email });
+        localStorage.setItem(
+          "email",
+          JSON.stringify({ email: formData.email })
+        );
+        navigate("/"); // redirect to homepage
+      } else {
+        setLoginError("Login failed. Please try again.");
+      }
     } catch (error) {
+      setLoginError(
+        "Login failed. Please check your credentials and try again."
+      );
       console.error("Error logging in:", error);
+    } finally {
       setLoader(false);
     }
   };
+  
 
   return (
     <div
@@ -83,7 +98,7 @@ const Login = () => {
           <button type="submit" className="btn" disabled={loader}>
             {loader ? <CircularProgress size={25} /> : "Login"}
           </button>
-
+          {loginError && <span className="error-message">{loginError}</span>}
           <div className="register-link">
             <p>
               Don't have an account?{" "}

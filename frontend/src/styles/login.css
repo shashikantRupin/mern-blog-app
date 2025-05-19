@@ -173,6 +173,10 @@
   text-decoration: underline;
   color: #f0f0f0;
 }
+.error-message{
+  display: inline-block;
+  color: red;
+}
 
 /* Media Queries for Responsiveness */
 @media screen and (max-width: 480px) {
