@@ -31,7 +31,6 @@ nav {
   align-items: center;
 }
 
-/* Brand / logo text */
 nav .title {
   font-size: 1.2rem;
   font-weight: bold;
@@ -39,17 +38,14 @@ nav .title {
   color: var(--navbar-text);
 }
 
-/* Desktop menu list */
 nav ul {
   display: flex;
 }
 
-/* Each list item */
 nav ul li {
   list-style: none;
 }
 
-/* Anchor links (desktop) */
 nav ul li a {
   display: block;
   text-decoration: none;
@@ -94,9 +90,21 @@ nav .menu span {
   background: none;
 }
 
-/* ──────────────────────────────────────────
-   Responsive (≤ 700 px)
-   ────────────────────────────────────────── */
+.login-btn, .logout-btn{
+  height: 48px;
+  width: 142px;
+  border-radius: 92px;
+  background-color: #2f2663;
+  color: white;
+  border: 2px solid #2f2663;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  letter-spacing: -0.29px;
+  line-height: 25px;
+  outline: none;
+  cursor: pointer;
+}
+
 @media (max-width: 700px) {
   /* Show burger */
   nav .menu {
@@ -170,19 +178,4 @@ nav .menu span {
   .logo-blog {
     display: none;
   }
-}
-
-.login-btn, .logout-btn{
-  height: 48px;
-  width: 142px;
-  border-radius: 92px;
-  background-color: #2f2663;
-  color: white;
-  border: 2px solid #2f2663;
-  font-family: "Poppins", sans-serif;
-  font-size: 16px;
-  letter-spacing: -0.29px;
-  line-height: 25px;
-  outline: none;
-  cursor: pointer;
 }
