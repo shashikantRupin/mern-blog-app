@@ -8,3 +8,12 @@
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
       padding: 10px;
      }
+
+     .latest-blog-header{
+       width: 100%;
+       font-size: 25px;
+       /* border: 1px solid red; */
+       text-align: center;
+       margin: 1rem;
+      
+     }

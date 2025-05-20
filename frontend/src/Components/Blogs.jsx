@@ -86,11 +86,11 @@ const Blogs = () => {
         </span>
       </div>
 
-      <u>
-        <h2 style={{ marginTop: "20px" }}>
+      
+        <div style={{ marginTop: "20px" }} className="latest-blog-header">
           Latest <span style={{ color: "blueViolet" }}> Blogs </span>
-        </h2>
-      </u>
+        </div>
+      
 
       <div className="post container">
         {!loading ? (
