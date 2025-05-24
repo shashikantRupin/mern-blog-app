@@ -22,7 +22,8 @@
     
     /* Mission Statement */
     .mission {
-      margin: 40px 0;
+     text-align: center;
+      margin: 40px auto;
     }
     
     .mission h2 {
@@ -77,6 +78,7 @@
     
     /* Core Values */
     .values {
+      text-align: center;
       margin: 40px 0;
     }
     

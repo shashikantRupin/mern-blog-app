@@ -18,7 +18,6 @@ const About = () => {
         <p>Empowering creators worldwide to share their stories.</p>
       </section>
 
-      {/* Mission Statement */}
       <section className={styles.mission}>
         <h2>Our Mission</h2>
         <p>
@@ -27,7 +26,6 @@ const About = () => {
         </p>
       </section>
 
-      {/* Team Introduction */}
       <section className={styles.team}>
         <h2>Meet the Team</h2>
         <div className={styles.teamMembers}>
@@ -38,7 +36,6 @@ const About = () => {
               <p>{item.deignation}</p>
             </div>
           ))}
-          {/* Add more team members as needed */}
         </div>
       </section>
 

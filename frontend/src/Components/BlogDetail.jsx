@@ -99,7 +99,7 @@ const BlogDetail = () => {
   return (
     <>
       <div className="blog-detail">
-        <img src={blog.imageUrl} alt="Blog Cover" className="blog-image" />
+        <img src={blog.imageUrl} alt="Blog Cover" className="blog-image-detail" />
         <h2>{blog.title}</h2>
         <p>{blog.content}</p>
         <p>
