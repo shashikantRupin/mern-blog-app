@@ -103,10 +103,7 @@ const Blogs = () => {
               </Link>
               <span className="post-date">{getTime(blog?.createdAt)}</span>
               <p className="post-description">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Consectetur, similique, rerum excepturi harum, vitae facilis
-                corrupti vel modi debitis est perferendis aut quasi ea unde
-                repudiandae iste architecto. Corporis, voluptates.
+                {blog?.content}
               </p>
               <div className="profile">
                 <img
