@@ -39,9 +39,13 @@ const Blogs = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
+  const updateData=()=>{
     const user = JSON.parse(localStorage.getItem("email"));
-    fetchBlogs(type,user);
+    fetchBlogs(type, user);
+  }
+
+  useEffect(() => {
+     updateData()
   }, [token, type]);
 
   const justfetch = () => {
@@ -76,8 +80,8 @@ const Blogs = () => {
      
       });
       if (res.status == 200 || res.status==201) {
-        fetchBlogs()
         alert("Blog deleted successfully.");
+       updateData();
       }
       // Optionally, refresh the blog list or navigate as needed
     } catch (error) {
