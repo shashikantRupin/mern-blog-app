@@ -43,7 +43,10 @@ A full-featured blog application where users can sign up, log in, create, view, 
 
 # Clone the repo
 git clone https://github.com/shashikantRupin/mern-blog-app
+
+# Go to frontend directory
 cd frontend
+
 
 # Install dependencies
 npm install
