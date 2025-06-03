@@ -41,4 +41,18 @@ A full-featured blog application where users can sign up, log in, create, view, 
 
 ---
 
+# Clone the repo
+git clone https://github.com/shashikantRupin/mern-blog-app
+cd frontend
+
+# Install dependencies
+npm install
+
+# Create .env file and add:
+# VITE_REACT_APP_API_URL=http://localhost:5000/
+
+# Run the frontend
+npm run dev
+
+
 
