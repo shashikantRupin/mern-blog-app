@@ -1,69 +1,135 @@
 import React from "react";
 import styles from "../styles/about.module.css";
+import { Link } from "react-router-dom";
 import img1 from "../images/testi1.jpg";
-import img3 from "../images/testi3.jpg";
 import img2 from "../images/testi2.jpg";
+import img3 from "../images/testi3.jpg";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
+import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
+import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
+import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const About = () => {
   const teamMember = [
-    { src: img1, name: "alexa bliss", deignation: "product manager" },
-    { src: img2, name: "john doe", deignation: "Lead Developer" },
-    { src: img3, name: "page watson", deignation: "fullstack Developer" },
+    { src: img1, name: "Alexa Bliss", designation: "Product & Strategy" },
+    { src: img2, name: "John Doe", designation: "Lead Architecture" },
+    { src: img3, name: "Page Watson", designation: "Fullstack Engineering" },
   ];
+
+  const values = [
+    {
+      icon: <LightbulbOutlinedIcon fontSize="medium" />,
+      title: "Curated Innovation",
+      desc: "Championing new concepts in engineering, creative design, and digital culture through clear, actionable writing.",
+    },
+    {
+      icon: <GroupsOutlinedIcon fontSize="medium" />,
+      title: "Global Community",
+      desc: "Building an inclusive space where both beginner learners and experienced professionals share insights.",
+    },
+    {
+      icon: <BoltOutlinedIcon fontSize="medium" />,
+      title: "High Performance",
+      desc: "Obsessed with lightning-fast load speeds, accessible reading typography, and distraction-free layouts.",
+    },
+    {
+      icon: <SecurityOutlinedIcon fontSize="medium" />,
+      title: "Editorial Integrity",
+      desc: "Promoting genuine stories and verified tutorials that bring real value to our readership.",
+    },
+  ];
+
   return (
     <div className={styles.aboutContainer}>
-      {/* Hero Section */}
-      <section className={styles.hero}>
-        <h1>Welcome to Our App</h1>
-        <p>Empowering creators worldwide to share their stories.</p>
+      {/* Hero Header */}
+      <section className={styles.heroSection}>
+        <div className="container">
+          <div className={styles.heroBadge}>
+            <AutoStoriesIcon fontSize="small" />
+            <span>Our Mission & Vision</span>
+          </div>
+          <h1 className={styles.heroTitle}>
+            Empowering Voices, <br />
+            <span className={styles.heroTitleGradient}>Inspiring Readers</span>
+          </h1>
+          <p className={styles.heroSubtitle}>
+            BlogNest is an open, modern publishing platform built to connect thinkers, developers, culinary artists, and storytellers from every corner of the globe.
+          </p>
+        </div>
       </section>
 
-      <section className={styles.mission}>
-        <h2>Our Mission</h2>
-        <p>
-          To provide creators with intuitive tools that simplify content
-          creation and foster innovation and collaboration.
-        </p>
+      {/* Mission & Purpose Grid */}
+      <section className="container">
+        <div className={styles.missionCard}>
+          <div className={styles.missionTextCol}>
+            <h2 className={styles.sectionHeading}>Why We Built BlogNest</h2>
+            <p className={styles.sectionParagraph}>
+              We believe great ideas shouldn't be trapped behind paywalls, intrusive ads, or complex tooling. BlogNest provides creators with clean, powerful writing workflows and provides readers with an uncluttered, high-readability experience across all devices.
+            </p>
+            <p className={styles.sectionParagraph}>
+              Whether you're sharing an in-depth code tutorial, reviewing culinary trends, or breaking news analysis, BlogNest gives you the stage to reach an engaged audience.
+            </p>
+          </div>
+        </div>
       </section>
 
-      <section className={styles.team}>
-        <h2>Meet the Team</h2>
-        <div className={styles.teamMembers}>
-          {teamMember?.map((item ,idx) => (
-            <div className={styles.member}>
-              <img src={item?.src} alt="Jane Doe" />
-              <h3>{item.name}</h3>
-              <p>{item.deignation}</p>
+      {/* Core Values */}
+      <section className="container">
+        <div className={styles.valuesSectionHeader}>
+          <h2 className={styles.sectionHeading}>Our Core Values</h2>
+          <p className={styles.sectionSubheading}>Principles that guide our engineering and editorial standards</p>
+        </div>
+
+        <div className={styles.valuesGrid}>
+          {values.map((v, i) => (
+            <div key={i} className={styles.valueCard}>
+              <div className={styles.valueIcon}>{v.icon}</div>
+              <h3 className={styles.valueTitle}>{v.title}</h3>
+              <p className={styles.valueDesc}>{v.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Core Values */}
-      <section className={styles.values}>
-        <h2>Our Values</h2>
-        <ul>
-          <li>
-            <strong>Innovation:</strong> Continuously improving to meet user
-            needs.
-          </li>
-          <li>
-            <strong>Community:</strong> Building a supportive and inclusive
-            environment.
-          </li>
-          <li>
-            <strong>Integrity:</strong> Upholding transparency and
-            trustworthiness.
-          </li>
-        </ul>
+      {/* Team Showcase */}
+      <section className="container">
+        <div className={styles.teamSectionHeader}>
+          <h2 className={styles.sectionHeading}>Meet the Core Team</h2>
+          <p className={styles.sectionSubheading}>Passionate designers and engineers crafting this platform</p>
+        </div>
+
+        <div className={styles.teamGrid}>
+          {teamMember.map((item, idx) => (
+            <div key={idx} className={styles.teamCard}>
+              <div className={styles.teamAvatarWrapper}>
+                <img src={item.src} alt={item.name} className={styles.teamAvatar} />
+              </div>
+              <h3 className={styles.teamName}>{item.name}</h3>
+              <p className={styles.teamRole}>{item.designation}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Call to Action */}
-      <section className={styles.cta}>
-        <h2>Join Our Community</h2>
-        <a href="/signup" className={styles.ctaButton}>
-          Get Started
-        </a>
+      <section className="container">
+        <div className={styles.ctaCard}>
+          <h2 className={styles.ctaTitle}>Ready to Share Your Voice?</h2>
+          <p className={styles.ctaDesc}>
+            Join thousands of creators publishing on BlogNest today. It takes less than a minute to get started.
+          </p>
+          <div className={styles.ctaButtonGroup}>
+            <Link to="/signup" className="btn-primary">
+              <span>Create Free Account</span>
+              <ArrowForwardIcon fontSize="small" />
+            </Link>
+            <Link to="/blogs" className="btn-secondary">
+              <span>Explore Stories</span>
+            </Link>
+          </div>
+        </div>
       </section>
     </div>
   );

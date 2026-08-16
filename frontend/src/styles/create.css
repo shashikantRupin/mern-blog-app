@@ -1,88 +1,341 @@
-.form-container {
-    background-image: url("https://smmpackage.in/wp-content/uploads/2021/07/content-writing-1.gif");
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 600px;
-    width: 100%;
-    /* padding: 20px; */
-    margin-bottom: -100px;
-    /* border: 1px solid red; */
-    box-sizing: border-box;
-  }
-  
-  .create-blog-header {
-    text-align: center;
-    color: #fff;
-    /* margin: 10px; */
-    padding: 1rem;
-    /* border: 1px solid red; */
-  }
-  
-  .form-element {
-    width: 400px;
-    margin:10px 150px 40px;
-    display: flex;
-    
-    flex-direction: column;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    /* border: 1px solid green; */
+/* ==========================================================================
+   MODERN CREATE BLOG / PUBLISHING STUDIO STYLES
+   ========================================================================== */
 
+.create-page-container {
+  padding-top: 36px;
+  padding-bottom: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Studio Header */
+.create-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.create-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.create-main-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.create-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* Form and Preview Layout */
+.create-form-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.create-main-fields {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.create-title-input {
+  width: 100%;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+.create-title-input:focus {
+  outline: none;
+  background: var(--bg-input-focus);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* Media Source Switcher & Dropzone */
+.media-toggle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.media-source-toggle {
+  display: flex;
+  background: var(--bg-hover);
+  padding: 3px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+}
+
+.source-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.source-tab-btn.active {
+  background: var(--bg-surface);
+  color: var(--accent-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.source-tab-btn:hover:not(.active) {
+  color: var(--text-primary);
+}
+
+/* File Dropzone */
+.file-upload-zone-wrapper {
+  width: 100%;
+}
+
+.file-dropzone {
+  border: 2px dashed var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  background: var(--bg-hover-subtle);
+  transition: all var(--transition-fast);
+}
+
+.file-dropzone:hover, .file-dropzone.dragging {
+  border-color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.06);
+}
+
+.dropzone-icon-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-full);
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.dropzone-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropzone-prompt {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.dropzone-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Selected File Card */
+.selected-file-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.file-thumbnail {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 1px solid var(--border-subtle);
+}
+
+.file-meta-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.file-name-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-size-text {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.file-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-change-btn {
+  font-size: 13px !important;
+  padding: 6px 12px !important;
+}
+
+.file-remove-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--error);
+  background: var(--error-bg);
+  transition: all var(--transition-fast);
+}
+
+.file-remove-btn:hover {
+  background: var(--error);
+  color: #ffffff;
+}
+
+.url-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.url-hint {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* Body Content */
+.create-textarea {
+  width: 100%;
+  font-size: 15.5px;
+  line-height: 1.7;
+  font-family: var(--font-sans);
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  color: var(--text-primary);
+  resize: vertical;
+  transition: all var(--transition-fast);
+}
+
+.create-textarea:focus {
+  outline: none;
+  background: var(--bg-input-focus);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.create-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.publish-btn {
+  padding: 12px 28px !important;
+  font-size: 15.5px !important;
+}
+
+/* Preview Sidebar */
+.create-preview-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 96px;
+}
+
+.preview-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.preview-card {
+  box-shadow: var(--shadow-md) !important;
+}
+
+.image-placeholder-box {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-input);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 13.5px;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .create-form-layout {
+    grid-template-columns: 1fr;
   }
-  .form-container div input {
-    width: 100%;
-    box-sizing: border-box;
+
+  .create-preview-sidebar {
+    position: static;
   }
-  .form-container div textarea {
-    width: 100%;
-    box-sizing: border-box;
+}
+
+@media (max-width: 580px) {
+  .create-main-fields {
+    padding: 24px 18px;
   }
-  
-  .form-container label {
-    font-weight: bold;
-    margin-bottom: 5px;
+
+  .create-main-title {
+    font-size: 26px;
   }
-  
-  .form-container input,
-  .form-container textarea,
-  .form-container select {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
-  
-  .form-container button[type="submit"] {
-    padding: 10px 20px;
-    background-color: #2f2663;
-    color: white;
-    border: 2px solid #2f2663;
-    font-family: "Poppins", sans-serif;
-    font-size: 16px;
-    letter-spacing: -0.29px;
-    line-height: 25px;
-    outline: none;
-    cursor: pointer;
-    box-sizing: border-box;
-  }
-  
-  .form-container button[type="submit"]:hover {
-    opacity: 0.8;
-  }
-  
-  @media all and (max-width: 700px){
-   
-    .form-element {
-      width: 320px ;
-      box-sizing: border-box;
-      margin:10px auto;
-      display: flex;
-      flex-direction: column;
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      border-radius: 10px;
-      border: 1px solid green !important;
-    }
-  }
+}

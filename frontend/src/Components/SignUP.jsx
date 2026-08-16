@@ -3,8 +3,15 @@ import axios from "axios";
 import "../styles/signup.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:7000";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +19,10 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [signupError, setSignupError] = useState("");
+  const [signupSuccess, setSignupSuccess] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,81 +31,133 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSignupError("");
+    setSignupSuccess("");
     try {
       setLoader(true);
       const response = await axios.post(`${baseURL}/signup`, formData);
-      setFormData({ name: "", email: "", password: "" });
-      setLoader(false);
-      navigate("/login"); // redirect to login after successful signup
+      if (response.status === 200 || response.status === 201) {
+        setSignupSuccess("Account created successfully! Redirecting to login...");
+        setFormData({ name: "", email: "", password: "" });
+        setTimeout(() => {
+          navigate("/login");
+        }, 1200);
+      } else {
+        setSignupError(response.data?.msg || "Sign up failed. Please try again.");
+      }
     } catch (error) {
       console.error("Error signing up:", error);
+      const serverMsg = error.response?.data?.msg || error.response?.data?.message;
+      setSignupError(serverMsg || "Failed to create account. Please check your details.");
+    } finally {
       setLoader(false);
     }
   };
 
   return (
-    <div
-      className="signup-container"
-      style={{
-        backgroundImage: `url(https://images.pexels.com/photos/733856/pexels-photo-733856.jpeg?auto=compress&cs=tinysrgb&w=1600)`,
-      }}
-    >
-      <div className="wrapper">
-        <form onSubmit={handleSubmit}>
-          <h1>Sign Up</h1>
+    <div className="auth-page-container">
+      <div className="auth-ambient-glow"></div>
 
-          <div className="input-box">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Full Name"
-              required
-            />
-            <i className="bx bxs-user"></i>
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-logo-badge">✦</div>
+          <h1 className="auth-title">Create Account</h1>
+          <p className="auth-subtitle">Join BlogNest to publish stories, connect with readers, and grow</p>
+        </div>
+
+        {signupError && (
+          <div className="auth-alert error">
+            <ErrorOutlineIcon fontSize="small" />
+            <span>{signupError}</span>
+          </div>
+        )}
+
+        {signupSuccess && (
+          <div className="auth-alert success">
+            <CheckCircleOutlineIcon fontSize="small" />
+            <span>{signupSuccess}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="auth-field">
+            <label className="auth-label">Full Name</label>
+            <div className="auth-input-wrapper">
+              <PersonOutlineIcon className="auth-input-icon" />
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Alex Morgan"
+                required
+                className="auth-input"
+              />
+            </div>
           </div>
 
-          <div className="input-box">
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              required
-            />
-            <i className="bx bxs-envelope"></i>
+          <div className="auth-field">
+            <label className="auth-label">Email Address</label>
+            <div className="auth-input-wrapper">
+              <EmailOutlinedIcon className="auth-input-icon" />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="name@example.com"
+                required
+                className="auth-input"
+              />
+            </div>
           </div>
 
-          <div className="input-box">
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              required
-            />
-            <i className="bx bxs-lock-alt"></i>
+          <div className="auth-field">
+            <label className="auth-label">Password</label>
+            <div className="auth-input-wrapper">
+              <LockOutlinedIcon className="auth-input-icon" />
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Minimum 6 characters"
+                required
+                className="auth-input"
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+              </button>
+            </div>
           </div>
 
-          <div className="terms-container">
-            <input type="checkbox" id="terms" required />
-            <label htmlFor="terms">
-              I agree to the <a href="#">Terms of Service</a> and{" "}
-              <a href="#">Privacy Policy</a>
+          <div className="auth-options">
+            <label className="checkbox-container">
+              <input type="checkbox" id="terms" required />
+              <span className="checkbox-label">
+                I agree to the <a href="#terms">Terms of Service</a> & <a href="#privacy">Privacy Policy</a>
+              </span>
             </label>
           </div>
 
-          <button type="submit" className="btn" disabled={loader}>
-            {!loader ? "Sign Up" : <CircularProgress size={25} />}
+          <button type="submit" className="auth-submit-btn" disabled={loader}>
+            {loader ? (
+              <CircularProgress size={22} style={{ color: "#ffffff" }} />
+            ) : (
+              "Create Account"
+            )}
           </button>
 
-          <div className="register-link">
-            <p>
-              Already have an account? <NavLink to="/login">Login</NavLink>
-            </p>
+          <div className="auth-switch-prompt">
+            Already have an account?{" "}
+            <NavLink to="/login" className="auth-switch-link">
+              Sign in
+            </NavLink>
           </div>
         </form>
       </div>

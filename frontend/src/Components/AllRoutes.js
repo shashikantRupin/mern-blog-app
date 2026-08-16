@@ -1,3 +1,4 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
@@ -6,9 +7,9 @@ import MyBlogs from "./MyBLogs";
 import Create from "./Create";
 import Blogs from "./Blogs";
 import About from "./About";
-import Contact from "./Contact";
 import BlogDetail from "./BlogDetail";
 import PrivateRoute from "./PrivateRoute";
+import NotFound from "./NotFound";
 
 const AllRoutes = () => {
   return (
@@ -16,14 +17,22 @@ const AllRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/blogDetail/:id" element={<PrivateRoute><BlogDetail/></PrivateRoute>} />
+      <Route path="/about" element={<About />} />
 
-      {/* Private Routes */}
+      {/* Protected Routes */}
       <Route
         path="/blogs"
         element={
           <PrivateRoute>
             <Blogs />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/blogDetail/:id"
+        element={
+          <PrivateRoute>
+            <BlogDetail />
           </PrivateRoute>
         }
       />
@@ -44,9 +53,8 @@ const AllRoutes = () => {
         }
       />
 
-      {/* Optional routes (uncomment if needed) */}
-      <Route path="/about" element={<About />} />
-      {/* <Route path="/contact" element={<Contact />} /> */}
+      {/* 404 Fallback */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

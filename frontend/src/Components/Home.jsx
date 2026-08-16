@@ -3,210 +3,310 @@ import axios from "axios";
 import "../styles/home.css";
 import { AuthContext } from "./AuthContext";
 import { Link } from "react-router-dom";
+import SkeletonCard from "./SkeletonCard";
 import img1 from "../images/img1.jpg";
 import img2 from "../images/img2.jpg";
 import img3 from "../images/img3.jpg";
-const baseURL = process.env.REACT_APP_BASE_URL;
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+
+const baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:7000";
 
 const staticBlogs = [
   {
     _id: "static1",
     imageUrl: img1,
-    type: "Tech",
-    title: "Mastering UI with Figma",
-    date: "12 Feb 2022",
-    description: "Discover the best Figma practices to build beautiful UIs.",
-    author: "MKHB",
+    type: "tech",
+    title: "Mastering Modern UI/UX Architecture with Figma & React",
+    date: "12 Feb 2024",
+    content: "Discover industry-standard UI design principles, design tokens, and components to build polished experiences.",
+    author: "Elena Rostova",
   },
   {
     _id: "static2",
     imageUrl: img2,
-    type: "Food",
-    title: "UI Design Tips for Chefs",
-    date: "10 Mar 2022",
-    description: "Learn how chefs are using UI tools to design recipes!",
-    author: "Chef UI",
+    type: "food",
+    title: "Culinary Aesthetics: The Art of Visual Flavor Storytelling",
+    date: "10 Mar 2024",
+    content: "How master chefs and culinary creators use visual storytelling and design principles to elevate modern gastronomy.",
+    author: "Chef Marcus",
   },
   {
     _id: "static3",
     imageUrl: img3,
-    type: "News",
-    title: "Designing for Accessibility",
-    date: "05 Jan 2022",
-    description: "How to make your UI friendly for everyone.",
-    author: "NewsUI",
+    type: "news",
+    title: "Designing Inclusive Digital Experiences: The A11y Revolution",
+    date: "05 Jan 2024",
+    content: "Why modern digital applications must prioritize web accessibility, contrast ratios, and semantic structure from day one.",
+    author: "David Chen",
   },
 ];
 
+const categories = [
+  { id: "", label: "All Topics" },
+  { id: "tech", label: "Technology" },
+  { id: "food", label: "Food & Culinary" },
+  { id: "news", label: "News & Trends" },
+  { id: "health", label: "Health & Wellness" },
+  { id: "other", label: "Other" },
+];
+
 const Home = () => {
-  const { token } = useContext(AuthContext);
+  const { token, loggedIn, getTime } = useContext(AuthContext);
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState("");
-  const { loggedIn, getTime } = useContext(AuthContext);
 
-  const fetchBlogs = async (type) => {
+  const fetchBlogs = async (categoryType) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${baseURL}/blogs?type=${type}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("resData", response.data);
-      setBlogs(response?.data);
-      // console.log(response?.data);
+      const response = await axios.get(
+        `${baseURL}/blogs${categoryType ? `?type=${categoryType}` : ""}`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+      if (Array.isArray(response?.data)) {
+        setBlogs(response.data);
+      }
     } catch (error) {
-      console.error("Error fetching blogs:", error);
+      console.log("Blogs feed note:", error.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (token) {
       fetchBlogs(type);
     }
   }, [token, type]);
 
-  const justfetch = () => {
-    setType("");
-  };
-
-  const onlytech = () => {
-    setType("tech");
-  };
-
-  const onlyFood = () => {
-    setType("food");
-  };
-
-  const onlyNews = () => {
-    setType("news");
-  };
+  // Filter static blogs if category is selected
+  const filteredStaticBlogs = type
+    ? staticBlogs.filter((b) => b.type.toLowerCase() === type.toLowerCase())
+    : staticBlogs;
 
   return (
-    <>
-      <section className="home" id="home">
-        <div className="home-text container">
-          <h2 className="home-title">Meet the Blogger</h2>
-          <span className="home-subtitle">Your source of great content</span>
-        </div>
-      </section>
+    <div className="home-page">
+      {/* Hero Section */}
+      <section className="home-hero-section">
+        <div className="container hero-container">
+          <div className="hero-badge">
+            <span className="badge-sparkle">✦</span>
+            <span>Welcome to the Next Generation Blog Platform</span>
+          </div>
 
-      <section className="about container" id="about">
-        <div className="contentBx">
-          <h2 className="titleText">Catch Up With the Trending Topics</h2>
-          <p className="title-text">
-            Dive into the world of ideas, stories, and inspiration. Whether
-            you're into tech, lifestyle, or the latest trends—our blog has
-            something for everyone. We bring you fresh perspectives, expert
-            opinions, and the most talked-about topics that matter.
-            <br />
-            Join our community of curious readers and discover content that's
-            not only informative but also engaging. From deep insights to fun
-            reads, stay in the loop with what's trending now.
+          <h1 className="hero-title">
+            Discover Great Ideas, <br />
+            <span className="hero-title-gradient">Stories & Perspectives</span>
+          </h1>
+
+          <p className="hero-description">
+            Dive into a world of curated articles, deep technical insights, culinary trends, and inspirational stories published by passionate writers worldwide.
           </p>
-          <a href="/blogs" className="btn2">
-            Read more
-          </a>
-        </div>
-        <div className="imgBx">
-          <img
-            src="https://images.unsplash.com/photo-1485178575877-1a13bf489dfe?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2lybCUyMGNsb3NlJTIwdXB8ZW58MHx8MHx8fDA%3D"
-            alt=""
-            className="fitBg"
-          />
-        </div>
-      </section>
 
-      <div className="filter-box">
-        <span
-          className="filter-item"
-          onClick={justfetch}
-          id={type === "" ? "active-filter" : ""}
-        >
-          All
-        </span>
-        <span
-          className="filter-item"
-          onClick={onlytech}
-          id={type === "tech" ? "active-filter" : ""}
-        >
-          Tech
-        </span>
-        <span
-          className="filter-item"
-          onClick={onlyFood}
-          id={type === "food" ? "active-filter" : ""}
-        >
-          Food
-        </span>
-        <span
-          className="filter-item"
-          onClick={onlyNews}
-          id={type === "news" ? "active-filter" : ""}
-        >
-          News
-        </span>
-      </div>
+          <div className="hero-cta-group">
+            <Link to="/blogs" className="btn-primary hero-btn">
+              <AutoStoriesOutlinedIcon fontSize="small" />
+              <span>Explore Articles</span>
+            </Link>
 
-      <div className="post container">
-        {/* API blogs come first */}
-        {blogs.length !== 0
-          ? blogs?.map((blog) => (
-              <div className="post-box" key={blog._id}>
-                <Link to={`/blogDetail/${blog._id}`}>
-                  <img src={blog.imageUrl} alt="dynamic" className="post-img" />
-                </Link>
-                <h2 className="category">{blog.type}</h2>
-                <h3 className="post-title">{blog.title}</h3>
-                <span className="post-date">{getTime(blog?.createdAt)}</span>
-                <p className="post-description">{blog.description}</p>
-                <div className="profile">
-                  <img
-                    src={
-                      blog.authorImage ||
-                      "https://pics.craiyon.com/2023-07-15/32c89c16131e490ab3536dc2e91bccb3.webp"
-                    }
-                    alt="profile"
-                    className="profile-img"
-                  />
-                  <span className="profile-name">
-                    {blog.author || "Unknown"}
-                  </span>
-                </div>
-              </div>
-            ))
-          : loggedIn && (
-              <img
-                src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1260.gif"
-                alt="load"
-                style={{ width: "250px" }}
-              />
+            {loggedIn ? (
+              <Link to="/create" className="btn-secondary hero-btn">
+                <CreateOutlinedIcon fontSize="small" />
+                <span>Write a Story</span>
+              </Link>
+            ) : (
+              <Link to="/signup" className="btn-secondary hero-btn">
+                <span>Join as a Writer</span>
+                <ArrowForwardIcon fontSize="small" />
+              </Link>
             )}
+          </div>
 
-        {/* Static blogs shown after dynamic blogs */}
-        {staticBlogs?.map((blog) => (
-          <div className="post-box" key={blog._id}>
-            {/* <Link to={`/blogDetail/${blog._id}`}> */}
-            <img src={blog.imageUrl} alt="static" className="post-img" />
-            {/* </Link> */}
-            <h2 className="category">{blog.type}</h2>
-            <h3 className="post-title">{blog.title}</h3>
-            <span className="post-date">{blog.date}</span>
-            <p className="post-description">{blog.description}</p>
-            <div className="profile">
-              <img
-                src="https://pics.craiyon.com/2023-07-15/32c89c16131e490ab3536dc2e91bccb3.webp"
-                alt="profile"
-                className="profile-img"
-              />
-              <span className="profile-name">{blog.author}</span>
+          <div className="hero-stats-strip">
+            <div className="stat-chip">
+              <span className="stat-chip-dot"></span>
+              <span>10,000+ Readers</span>
+            </div>
+            <div className="stat-chip">
+              <span className="stat-chip-dot"></span>
+              <span>Fast & Minimal</span>
+            </div>
+            <div className="stat-chip">
+              <span className="stat-chip-dot"></span>
+              <span>Open Publishing</span>
             </div>
           </div>
-        ))}
-      </div>
-    </>
+        </div>
+      </section>
+
+      {/* Featured Spotlight Card */}
+      <section className="spotlight-section container">
+        <div className="spotlight-card">
+          <div className="spotlight-content">
+            <div className="spotlight-tag">
+              <TrendingUpIcon fontSize="small" />
+              <span>Featured Spotlight</span>
+            </div>
+            <h2 className="spotlight-title">
+              Catch Up With What's Shaping the Creative World
+            </h2>
+            <p className="spotlight-text">
+              From the evolution of generative AI tools and design systems to sustainable culinary culture, stay ahead of the curve with our community's top curated reads.
+            </p>
+            <Link to="/blogs" className="spotlight-link">
+              <span>Browse All Topics</span>
+              <ArrowForwardIcon fontSize="small" />
+            </Link>
+          </div>
+          <div className="spotlight-media">
+            <img
+              src="https://images.unsplash.com/photo-1485178575877-1a13bf489dfe?q=80&w=1000&auto=format&fit=crop"
+              alt="Spotlight feature"
+              className="spotlight-image"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Main Feed Section */}
+      <section className="feed-section container">
+        <div className="feed-header">
+          <div>
+            <h2 className="feed-title">Latest Publications</h2>
+            <p className="feed-subtitle">Explore recently published articles across your favorite categories</p>
+          </div>
+        </div>
+
+        {/* Category Filter Pills */}
+        <div className="filter-pill-bar">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              className={`filter-pill ${type === cat.id ? "active" : ""}`}
+              onClick={() => setType(cat.id)}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Articles Grid */}
+        <div className="articles-grid">
+          {/* Loading Skeletons */}
+          {loading && (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          )}
+
+          {/* Dynamic API Blogs (if logged in and loaded) */}
+          {!loading &&
+            blogs &&
+            blogs.length > 0 &&
+            blogs.map((blog) => (
+              <article className="blog-card" key={blog._id}>
+                <div className="card-media-wrapper">
+                  <Link to={`/blogDetail/${blog._id}`} className="card-media-link">
+                    <img
+                      src={
+                        blog.imageUrl ||
+                        "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80"
+                      }
+                      alt={blog.title}
+                      className="card-media-img"
+                      loading="lazy"
+                    />
+                  </Link>
+                  <span className={`category-badge ${blog.type?.toLowerCase() || "tech"}`}>
+                    {blog.type || "General"}
+                  </span>
+                </div>
+
+                <div className="card-body">
+                  <div className="card-meta">
+                    <span className="card-date">
+                      <AccessTimeIcon fontSize="inherit" />
+                      {getTime ? getTime(blog.createdAt) : "Recently"}
+                    </span>
+                    <span className="card-read-time">4 min read</span>
+                  </div>
+
+                  <Link to={`/blogDetail/${blog._id}`} className="card-title-link">
+                    <h3 className="card-title">{blog.title}</h3>
+                  </Link>
+
+                  <p className="card-excerpt">{blog.content || blog.description}</p>
+
+                  <div className="card-footer">
+                    <div className="author-info">
+                      <div className="author-avatar-chip">
+                        {(blog.auth_email || blog.author || "U").charAt(0).toUpperCase()}
+                      </div>
+                      <span className="author-name">
+                        {blog.author || (blog.auth_email ? blog.auth_email.split("@")[0] : "Author")}
+                      </span>
+                    </div>
+
+                    <Link to={`/blogDetail/${blog._id}`} className="card-read-more" aria-label="Read full article">
+                      <span>Read</span>
+                      <ArrowForwardIcon fontSize="inherit" />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+
+          {/* Static Featured Blogs */}
+          {!loading &&
+            filteredStaticBlogs.map((blog) => (
+              <article className="blog-card" key={blog._id}>
+                <div className="card-media-wrapper">
+                  <div className="card-media-link">
+                    <img src={blog.imageUrl} alt={blog.title} className="card-media-img" loading="lazy" />
+                  </div>
+                  <span className={`category-badge ${blog.type?.toLowerCase() || "tech"}`}>
+                    {blog.type}
+                  </span>
+                </div>
+
+                <div className="card-body">
+                  <div className="card-meta">
+                    <span className="card-date">
+                      <AccessTimeIcon fontSize="inherit" />
+                      {blog.date}
+                    </span>
+                    <span className="card-read-time">5 min read</span>
+                  </div>
+
+                  <h3 className="card-title">{blog.title}</h3>
+
+                  <p className="card-excerpt">{blog.content}</p>
+
+                  <div className="card-footer">
+                    <div className="author-info">
+                      <div className="author-avatar-chip">
+                        {blog.author.charAt(0).toUpperCase()}
+                      </div>
+                      <span className="author-name">{blog.author}</span>
+                    </div>
+
+                    <span className="featured-card-badge">Featured</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+        </div>
+      </section>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-express= require('express');
+const express = require('express');
 const blogRouter = express.Router();
 const BlogModel = require('../models/Blog.module');
 const UserModel = require('../models/User.module');
@@ -83,10 +83,14 @@ blogRouter.get('/:id', async (req, res) => {
 
 blogRouter.put('/update/:id', async (req, res) => {
   const { id } = req.params;
-  const { title, content } = req.body;
+  const { title, content, type, imageUrl } = req.body;
 
   try {
-      const updatedBlog = await BlogModel.findByIdAndUpdate(id, { title, content }, { new: true });
+      const updatePayload = { title, content };
+      if (type) updatePayload.type = type;
+      if (imageUrl !== undefined) updatePayload.imageUrl = imageUrl;
+
+      const updatedBlog = await BlogModel.findByIdAndUpdate(id, updatePayload, { new: true });
 
       if (!updatedBlog) {
           return res.status(404).json({ message: 'Blog not found' });

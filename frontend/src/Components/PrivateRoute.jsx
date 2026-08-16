@@ -1,19 +1,24 @@
-import React, { useContext } from 'react'
-import { AuthContext } from './AuthContext'
+import React, { useContext } from 'react';
+import { AuthContext } from './AuthContext';
 import { Navigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 
-const PrivateRoute = ({children}) => {
-      const { loggedIn, token, loading } = useContext(AuthContext);
+const PrivateRoute = ({ children }) => {
+  const { loggedIn, loading } = useContext(AuthContext);
 
-      if (loading) {
-        // Show a loader or nothing while checking auth
-        return <div>Loading...</div>;
-      }
-      if (!loggedIn) {
-        alert("login first");
-        return <Navigate to="/login" replace />;
-      }
-      return children;
-}
+  if (loading) {
+    return (
+      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CircularProgress size={36} style={{ color: 'var(--accent-primary)' }} />
+      </div>
+    );
+  }
 
-export default PrivateRoute
+  if (!loggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+export default PrivateRoute;

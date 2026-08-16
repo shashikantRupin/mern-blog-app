@@ -2,196 +2,281 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
-import "../styles/myBlog.css"; 
-import { confirmAlert } from "react-confirm-alert";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import SkeletonCard from "./SkeletonCard";
+import "../styles/myBlog.css";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import AddIcon from "@mui/icons-material/Add";
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import SearchIcon from "@mui/icons-material/Search";
 
+const baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:7000";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const categories = [
+  { id: "", label: "All Topics" },
+  { id: "tech", label: "Technology" },
+  { id: "food", label: "Food" },
+  { id: "news", label: "News" },
+  { id: "health", label: "Health" },
+  { id: "other", label: "Other" },
+];
 
-const Blogs = () => {
-  const { token } = useContext(AuthContext);
+const MyBlogs = () => {
+  const { token, user, confirmAction, getTime } = useContext(AuthContext);
   const [blogs, setBlogs] = useState([]);
   const [type, setType] = useState("");
-  const [loading, setLoading] = useState(false);
-  const[userInfo, setUserInfo]=useState({})
-  const { confirmAction } = useContext(AuthContext);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const fetchBlogs = async (type="",user) => {
+  const fetchBlogs = async (categoryType = "", currentUser) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${baseURL}/blogs?type=${type}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      // Filter blogs by auth_email matching the logged-in user's email
-      const filteredBlogs = response?.data?.filter(
-        (blog) => blog.auth_email === user?.email
+      const response = await axios.get(
+        `${baseURL}/blogs${categoryType ? `?type=${categoryType}` : ""}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      console.log("filteredBlogs123",response?.data);
+
+      const userEmail = currentUser?.email || user?.email;
+      const filteredBlogs = (response?.data || []).filter(
+        (blog) => blog.auth_email === userEmail
+      );
       setBlogs(filteredBlogs);
     } catch (error) {
-      console.error("Error fetching blogs:", error);
+      console.error("Error fetching user blogs:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const updateData=()=>{
-    const user = JSON.parse(localStorage.getItem("email"));
-    fetchBlogs(type, user);
-  }
+  const updateData = () => {
+    let currentUser = user;
+    try {
+      const stored = JSON.parse(localStorage.getItem("email"));
+      if (stored) currentUser = stored;
+    } catch (e) {}
+    fetchBlogs(type, currentUser);
+  };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-     updateData()
+    updateData();
   }, [token, type]);
 
-  const justfetch = () => {
-    setType("");
-  };
-
-  const onlytech = () => {
-    setType("tech");
-  };
-
-  const onlyFood = () => {
-    setType("food");
-  };
-
-  const onlyNews = () => {
-    setType("news");
-  };
-
   const handleDelete = async (id) => {
-    const isConfirmed = await confirmAction(
-      "Confirm Deletion",
-      "Are you sure you want to delete this blog?"
-    );
+    const isConfirmed = confirmAction
+      ? await confirmAction(
+          "Confirm Deletion",
+          "Are you sure you want to permanently delete this blog post? This cannot be undone."
+        )
+      : window.confirm("Are you sure you want to delete this blog?");
 
     if (!isConfirmed) return;
 
     try {
-    const res=  await axios.delete(`${baseURL}/blogs/delete/${id}`, {
+      const res = await axios.delete(`${baseURL}/blogs/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-     
       });
-      if (res.status == 200 || res.status==201) {
-        alert("Blog deleted successfully.");
-       updateData();
+      if (res.status === 200 || res.status === 201) {
+        updateData();
       }
-      // Optionally, refresh the blog list or navigate as needed
     } catch (error) {
       console.error("Error deleting blog:", error);
       alert("Failed to delete the blog. Please try again.");
     }
   };
-  
-  const isSingleItem = blogs.length === 1;
+
+  // Derived statistics
+  const totalPosts = blogs.length;
+  const uniqueCategories = new Set(blogs.map((b) => b.type).filter(Boolean)).size;
+  const latestPost = blogs.length > 0 ? (getTime ? getTime(blogs[0]?.createdAt) : "Recently") : "No posts yet";
+
+  // Filtered by search term
+  const displayedBlogs = blogs.filter((blog) =>
+    blog.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    blog.content?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div>
-      <div className="filter-box container">
-        <span
-          className="filter-item"
-          onClick={justfetch}
-          id={type === "" ? "active-filter" : ""}
-        >
-          All
-        </span>
-        <span
-          className="filter-item"
-          onClick={onlytech}
-          id={type === "tech" ? "active-filter" : ""}
-        >
-          Tech
-        </span>
-        <span
-          className="filter-item"
-          onClick={onlyFood}
-          id={type === "food" ? "active-filter" : ""}
-        >
-          Food
-        </span>
-        <span
-          className="filter-item"
-          onClick={onlyNews}
-          id={type === "news" ? "active-filter" : ""}
-        >
-          News
-        </span>
+    <div className="dashboard-page container">
+      {/* Dashboard Top Header */}
+      <div className="dashboard-header">
+        <div>
+          <div className="dashboard-badge">Creator Studio</div>
+          <h1 className="dashboard-title">My Dashboard & Articles</h1>
+          <p className="dashboard-subtitle">
+            Manage your published stories, monitor article stats, and compose new articles.
+          </p>
+        </div>
+
+        <Link to="/create" className="btn-primary">
+          <AddIcon fontSize="small" />
+          <span>New Article</span>
+        </Link>
       </div>
 
-      <h2 className="your-blogs-heading">Your Blogs</h2>
+      {/* Stats Cards Row */}
+      <div className="dashboard-stats-grid">
+        <div className="stat-card">
+          <div className="stat-card-icon articles">
+            <ArticleOutlinedIcon />
+          </div>
+          <div className="stat-card-info">
+            <span className="stat-card-label">Total Articles</span>
+            <h3 className="stat-card-value">{totalPosts}</h3>
+          </div>
+        </div>
 
-      <div
-        className={`${
-          isSingleItem ? "single-item-container" : "blogs-list-container"
-        }`}
-      >
-        {!loading ? (
-          blogs?.map((blog) => (
-            <div
-              key={blog._id}
-              className={`blog-card ${isSingleItem ? "single-item" : ""}`}
+        <div className="stat-card">
+          <div className="stat-card-icon categories">
+            <CategoryOutlinedIcon />
+          </div>
+          <div className="stat-card-info">
+            <span className="stat-card-label">Active Topics</span>
+            <h3 className="stat-card-value">{uniqueCategories}</h3>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card-icon date">
+            <CalendarMonthOutlinedIcon />
+          </div>
+          <div className="stat-card-info">
+            <span className="stat-card-label">Latest Publication</span>
+            <h3 className="stat-card-value small">{latestPost}</h3>
+          </div>
+        </div>
+      </div>
+
+      {/* Filter and Search Bar */}
+      <div className="dashboard-filter-row">
+        <div className="filter-pill-bar">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              className={`filter-pill ${type === cat.id ? "active" : ""}`}
+              onClick={() => setType(cat.id)}
             >
-              <Link to={`/blogDetail/${blog._id}`}>
-                <img
-                  src={blog.imageUrl}
-                  alt={blog.title}
-                  className="blog-image"
-                />
-              </Link>
-              <div className="blog-info">
-                <h3> Title :{blog.title}</h3>
-                <p>Type: {blog.type}</p>
-                <p>{blog.content}</p>
-                <p>Author: {blog.auth_email}</p>
+              {cat.label}
+            </button>
+          ))}
+        </div>
 
-                <div className="button-container" align="right">
-                  <Link to={`/blogDetail/${blog._id}`}>
-                    <button className="edit-btn">
-                      Edit
-                      <EditIcon className="icon-edit" />
-                    </button>
+        <div className="dashboard-search-wrapper">
+          <SearchIcon className="search-input-icon" />
+          <input
+            type="text"
+            placeholder="Search your articles..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="explore-search-input"
+          />
+        </div>
+      </div>
+
+      {/* Articles Grid */}
+      <div className="articles-grid">
+        {loading && (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        )}
+
+        {!loading &&
+          displayedBlogs.map((blog) => (
+            <article className="blog-card dashboard-article-card" key={blog._id}>
+              <div className="card-media-wrapper">
+                <Link to={`/blogDetail/${blog._id}`} className="card-media-link">
+                  <img
+                    src={
+                      blog.imageUrl ||
+                      "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80"
+                    }
+                    alt={blog.title}
+                    className="card-media-img"
+                  />
+                </Link>
+                <span className={`category-badge ${blog.type?.toLowerCase() || "tech"}`}>
+                  {blog.type || "General"}
+                </span>
+              </div>
+
+              <div className="card-body">
+                <div className="card-meta">
+                  <span className="card-date">
+                    {getTime ? getTime(blog.createdAt) : "Published"}
+                  </span>
+                </div>
+
+                <Link to={`/blogDetail/${blog._id}`} className="card-title-link">
+                  <h3 className="card-title">{blog.title}</h3>
+                </Link>
+
+                <p className="card-excerpt">{blog.content}</p>
+
+                <div className="dashboard-card-actions">
+                  <Link to={`/blogDetail/${blog._id}`} className="dash-btn view">
+                    <VisibilityOutlinedIcon fontSize="small" />
+                    <span>View</span>
                   </Link>
+
+                  <Link to={`/blogDetail/${blog._id}`} className="dash-btn edit">
+                    <EditOutlinedIcon fontSize="small" />
+                    <span>Edit</span>
+                  </Link>
+
                   <button
-                    className="delete-btn"
-                    onClick={() => {
-                      handleDelete(blog._id);
-                    }}
+                    className="dash-btn delete"
+                    onClick={() => handleDelete(blog._id)}
+                    aria-label="Delete article"
                   >
-                    Delete
-                    <DeleteIcon className="icon-delete" />
+                    <DeleteOutlineIcon fontSize="small" />
+                    <span>Delete</span>
                   </button>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <img
-            src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1260.gif"
-            alt="load"
-            className="loader"
-          />
-        )}
-
-        {blogs?.length === 0 && !loading ? (
-          <div className="no-blog">
-            <img
-              src="https://cdn.dribbble.com/users/95510/screenshots/1694572/no-chat_gif.gif"
-              alt="no blogs"
-            />
-          </div>
-        ) : (
-          ""
-        )}
+            </article>
+          ))}
       </div>
+
+      {/* Empty State */}
+      {!loading && displayedBlogs.length === 0 && (
+        <div className="empty-state-card">
+          <div className="empty-state-icon">✍️</div>
+          <h3 className="empty-state-title">
+            {searchTerm ? "No matching articles found" : "You haven't written any articles yet"}
+          </h3>
+          <p className="empty-state-text">
+            {searchTerm
+              ? `No articles match "${searchTerm}". Try resetting your filter.`
+              : "Share your knowledge, ideas, or guides with the world. Click below to start composing your first post!"}
+          </p>
+          <div className="empty-state-actions">
+            {searchTerm ? (
+              <button className="btn-secondary" onClick={() => setSearchTerm("")}>
+                Clear Search
+              </button>
+            ) : (
+              <Link to="/create" className="btn-primary">
+                <AddIcon fontSize="small" />
+                <span>Create Your First Article</span>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Blogs;
+export default MyBlogs;
