@@ -32,6 +32,19 @@ app.post('/signup', async (req, res) => {
       return res.status(400).json({ msg: 'User with this email already exists' });
     }
 
+    // Strong Password Validation: 8+ chars, uppercase, lowercase, number, special char
+    const hasMinLength = password.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasDigit = /[0-9]/.test(password);
+    const hasSpecialChar = /[@$!%*?&#^()_+\-=\[\]{};':"\\|,.<>\/?~`]/.test(password);
+
+    if (!hasMinLength || !hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecialChar) {
+      return res.status(400).json({
+        msg: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., Rupin@123).'
+      });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await UserModel.create({
       name: name.trim(),

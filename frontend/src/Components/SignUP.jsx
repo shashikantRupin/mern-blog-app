@@ -10,6 +10,8 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 
 const baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:7000";
 
@@ -20,6 +22,7 @@ const Signup = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [loader, setLoader] = useState(false);
   const [signupError, setSignupError] = useState("");
   const [signupSuccess, setSignupSuccess] = useState("");
@@ -29,10 +32,41 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Password validation criteria
+  const password = formData.password;
+  const criteria = {
+    minLength: password.length >= 8,
+    hasUpper: /[A-Z]/.test(password),
+    hasLower: /[a-z]/.test(password),
+    hasDigit: /[0-9]/.test(password),
+    hasSpecial: /[@$!%*?&#^()_+\-=[\]{};':"\\|,.<>/?~`]/.test(password),
+  };
+
+  const validCount = Object.values(criteria).filter(Boolean).length;
+  const isStrongPassword = validCount === 5;
+
+  const getStrengthMeta = () => {
+    if (!password) return { label: "", percent: 0, className: "" };
+    if (validCount <= 2) return { label: "Weak", percent: 30, className: "weak" };
+    if (validCount <= 4) return { label: "Moderate", percent: 70, className: "medium" };
+    return { label: "Strong & Secure", percent: 100, className: "strong" };
+  };
+
+  const strengthMeta = getStrengthMeta();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSignupError("");
     setSignupSuccess("");
+
+    // Client-side strength check
+    if (!isStrongPassword) {
+      setSignupError(
+        "Please create a stronger password meeting all requirements (e.g. Rupin@123)."
+      );
+      return;
+    }
+
     try {
       setLoader(true);
       const response = await axios.post(`${baseURL}/signup`, formData);
@@ -58,7 +92,7 @@ const Signup = () => {
     <div className="auth-page-container">
       <div className="auth-ambient-glow"></div>
 
-      <div className="auth-card">
+      <div className="auth-card signup-card">
         <div className="auth-header">
           <div className="auth-logo-badge">✦</div>
           <h1 className="auth-title">Create Account</h1>
@@ -113,7 +147,11 @@ const Signup = () => {
           </div>
 
           <div className="auth-field">
-            <label className="auth-label">Password</label>
+            <div className="auth-label-row">
+              <label className="auth-label">Password</label>
+              <span className="password-example-hint">e.g. Rupin@123</span>
+            </div>
+
             <div className="auth-input-wrapper">
               <LockOutlinedIcon className="auth-input-icon" />
               <input
@@ -121,7 +159,8 @@ const Signup = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Minimum 6 characters"
+                onFocus={() => setIsPasswordFocused(true)}
+                placeholder="Create a strong password"
                 required
                 className="auth-input"
               />
@@ -134,6 +173,77 @@ const Signup = () => {
                 {showPassword ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
               </button>
             </div>
+
+            {/* Live Strength Meter Bar */}
+            {password.length > 0 && (
+              <div className="strength-meter-container">
+                <div className="strength-meter-header">
+                  <span className="strength-text">Password Strength:</span>
+                  <span className={`strength-badge ${strengthMeta.className}`}>
+                    {strengthMeta.label}
+                  </span>
+                </div>
+                <div className="strength-meter-track">
+                  <div
+                    className={`strength-meter-fill ${strengthMeta.className}`}
+                    style={{ width: `${strengthMeta.percent}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
+
+            {/* Interactive Password Requirements Checklist */}
+            {(isPasswordFocused || password.length > 0) && (
+              <div className="password-checklist-box">
+                <span className="checklist-title">Password must contain:</span>
+                <div className="checklist-grid">
+                  <div className={`checklist-item ${criteria.minLength ? "met" : ""}`}>
+                    {criteria.minLength ? (
+                      <CheckIcon className="check-icon met" fontSize="inherit" />
+                    ) : (
+                      <CloseIcon className="check-icon" fontSize="inherit" />
+                    )}
+                    <span>8+ characters</span>
+                  </div>
+
+                  <div className={`checklist-item ${criteria.hasUpper ? "met" : ""}`}>
+                    {criteria.hasUpper ? (
+                      <CheckIcon className="check-icon met" fontSize="inherit" />
+                    ) : (
+                      <CloseIcon className="check-icon" fontSize="inherit" />
+                    )}
+                    <span>Uppercase (A-Z)</span>
+                  </div>
+
+                  <div className={`checklist-item ${criteria.hasLower ? "met" : ""}`}>
+                    {criteria.hasLower ? (
+                      <CheckIcon className="check-icon met" fontSize="inherit" />
+                    ) : (
+                      <CloseIcon className="check-icon" fontSize="inherit" />
+                    )}
+                    <span>Lowercase (a-z)</span>
+                  </div>
+
+                  <div className={`checklist-item ${criteria.hasDigit ? "met" : ""}`}>
+                    {criteria.hasDigit ? (
+                      <CheckIcon className="check-icon met" fontSize="inherit" />
+                    ) : (
+                      <CloseIcon className="check-icon" fontSize="inherit" />
+                    )}
+                    <span>Number (0-9)</span>
+                  </div>
+
+                  <div className={`checklist-item ${criteria.hasSpecial ? "met" : ""}`}>
+                    {criteria.hasSpecial ? (
+                      <CheckIcon className="check-icon met" fontSize="inherit" />
+                    ) : (
+                      <CloseIcon className="check-icon" fontSize="inherit" />
+                    )}
+                    <span>Special (@, #, $, %)</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="auth-options">
@@ -145,7 +255,11 @@ const Signup = () => {
             </label>
           </div>
 
-          <button type="submit" className="auth-submit-btn" disabled={loader}>
+          <button
+            type="submit"
+            className="auth-submit-btn"
+            disabled={loader || (password.length > 0 && !isStrongPassword)}
+          >
             {loader ? (
               <CircularProgress size={22} style={{ color: "#ffffff" }} />
             ) : (

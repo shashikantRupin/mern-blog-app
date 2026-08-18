@@ -8,7 +8,7 @@ async function fullE2ETest() {
   const testUser = {
     name: 'Shashikant Tester',
     email: `tester_${Date.now()}@test.com`,
-    password: 'SecurePassword123'
+    password: 'SecurePassword@123'
   };
 
   // Step 1: Sign Up

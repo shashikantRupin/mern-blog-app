@@ -1,2 +1,141 @@
-/* Signup page utilizes shared authentication styles */
+/* ==========================================================================
+   SIGNUP & STRONG PASSWORD VALIDATION STYLES
+   ========================================================================== */
+
 @import "./login.css";
+
+.signup-card {
+  max-width: 480px !important;
+}
+
+.password-example-hint {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  background: var(--bg-hover-subtle);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* Strength Meter */
+.strength-meter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  animation: fadeIn 0.2s ease;
+}
+
+.strength-meter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+}
+
+.strength-text {
+  color: var(--text-muted);
+}
+
+.strength-badge {
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.strength-badge.weak {
+  color: var(--error);
+}
+
+.strength-badge.medium {
+  color: #f59e0b;
+}
+
+.strength-badge.strong {
+  color: var(--success);
+}
+
+.strength-meter-track {
+  width: 100%;
+  height: 5px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.strength-meter-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+}
+
+.strength-meter-fill.weak {
+  background: var(--error);
+}
+
+.strength-meter-fill.medium {
+  background: #f59e0b;
+}
+
+.strength-meter-fill.strong {
+  background: var(--success);
+}
+
+/* Password Checklist Box */
+.password-checklist-box {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: slideDown 0.25s ease;
+}
+
+.checklist-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.checklist-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.checklist-item.met {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.check-icon {
+  font-size: 14px !important;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.check-icon.met {
+  color: var(--success);
+}
+
+@media (max-width: 480px) {
+  .checklist-grid {
+    grid-template-columns: 1fr;
+  }
+}
