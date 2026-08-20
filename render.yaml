@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: mern-blog-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 7000

@@ -1,0 +1,17 @@
+{
+  "name": "mern-blog-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MERN Blog Application",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "start": "node backend/index.js",
+    "build": "echo \"Build completed\"",
+    "start:backend": "node backend/index.js",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm start --workspace=frontend"
+  }
+}
