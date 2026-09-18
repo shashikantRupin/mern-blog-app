@@ -146,6 +146,10 @@ app.post('/forgot-password/send-otp', async (req, res) => {
       });
     } catch (mailError) {
       console.error('[MAIL ERROR] Failed to send email via transporter:', mailError);
+      return res.status(500).json({
+        msg: `Failed to deliver email: ${mailError.message || 'SMTP delivery failed'}. Please check your email configuration on Render.`,
+        error: mailError.message,
+      });
     }
 
     console.log(`\n========================================`);

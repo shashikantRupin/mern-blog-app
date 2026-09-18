@@ -17,24 +17,32 @@ const createTransporter = () => {
         user: process.env.SMTP_USER ? process.env.SMTP_USER.trim() : emailUser,
         pass: process.env.SMTP_PASS ? process.env.SMTP_PASS.trim().replace(/\s+/g, '') : emailPass,
       },
-      connectionTimeout: 8000,
-      greetingTimeout: 8000,
-      socketTimeout: 10000,
+      family: 4, // Force IPv4
+      tls: {
+        rejectUnauthorized: false,
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
     });
   }
 
-  // Use direct Gmail SMTP SSL on port 465 for 100% reliability on cloud hosts (Render, AWS, Vercel)
+  // Use direct Gmail SMTP SSL on port 465 with IPv4 forcing for 100% reliability on Render
   return nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
-    secure: true, // SSL on port 465 prevents STARTTLS hang on Render
+    secure: true,
     auth: {
       user: emailUser,
       pass: emailPass,
     },
-    connectionTimeout: 8000,
-    greetingTimeout: 8000,
-    socketTimeout: 10000,
+    family: 4, // Force IPv4 to prevent Render IPv6 DNS connection drops
+    tls: {
+      rejectUnauthorized: false,
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 };
 
