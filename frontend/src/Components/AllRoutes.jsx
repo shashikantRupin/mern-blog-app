@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
 import SignUp from "./SignUP";
+import ForgotPassword from "./ForgotPassword";
 import MyBlogs from "./MyBLogs";
 import Create from "./Create";
 import Blogs from "./Blogs";
@@ -17,6 +18,7 @@ const AllRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/about" element={<About />} />
 
       {/* Protected Routes */}

@@ -12,6 +12,7 @@ import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SearchIcon from "@mui/icons-material/Search";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:7000";
 
@@ -25,7 +26,7 @@ const categories = [
 ];
 
 const MyBlogs = () => {
-  const { token, user, confirmAction, getTime } = useContext(AuthContext);
+  const { token, user, confirmAction, getTime, getReadTime } = useContext(AuthContext);
   const [blogs, setBlogs] = useState([]);
   const [type, setType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -214,7 +215,11 @@ const MyBlogs = () => {
               <div className="card-body">
                 <div className="card-meta">
                   <span className="card-date">
+                    <AccessTimeIcon fontSize="inherit" />
                     {getTime ? getTime(blog.createdAt) : "Published"}
+                  </span>
+                  <span className="card-read-time">
+                    {getReadTime ? getReadTime(blog.content) : "1 min read"}
                   </span>
                 </div>
 

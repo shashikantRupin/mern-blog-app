@@ -188,6 +188,20 @@
   font-weight: 500;
 }
 
+.article-read-time {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.article-read-time::before {
+  content: "•";
+  margin-right: 12px;
+  color: var(--border-strong);
+}
+
 .article-title {
   font-size: 40px;
   font-weight: 800;

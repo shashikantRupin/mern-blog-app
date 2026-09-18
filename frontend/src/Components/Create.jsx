@@ -16,7 +16,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 const baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:7000";
 
 const CreateBlog = () => {
-  const { token } = useContext(AuthContext);
+  const { token, getReadTime } = useContext(AuthContext);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [type, setType] = useState("tech");
@@ -356,7 +356,9 @@ const CreateBlog = () => {
             <div className="card-body">
               <div className="card-meta">
                 <span className="card-date">Draft Preview</span>
-                <span className="card-read-time">3 min read</span>
+                <span className="card-read-time">
+                  {getReadTime ? getReadTime(content) : "1 min read"}
+                </span>
               </div>
 
               <h4 className="card-title">{title || "Your article title will appear here..."}</h4>

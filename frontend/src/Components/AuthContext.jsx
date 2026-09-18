@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { confirmAlert } from "react-confirm-alert";
+import { getReadTime } from "../utils/readingTime";
 
 const AuthContext = createContext();
 
@@ -75,6 +76,7 @@ const AuthProvider = ({ children }) => {
         setUser,
         confirmAction,
         getTime,
+        getReadTime,
         loading,
       }}
     >
@@ -83,4 +85,4 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-export { AuthContext, AuthProvider };
+export { AuthContext, AuthProvider, getReadTime };

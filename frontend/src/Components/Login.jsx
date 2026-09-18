@@ -95,7 +95,9 @@ const Login = () => {
           <div className="auth-field">
             <div className="auth-label-row">
               <label className="auth-label">Password</label>
-              <a href="#forgot" className="auth-forgot-link">Forgot?</a>
+              <NavLink to="/forgot-password" className="auth-forgot-link">
+                Forgot password?
+              </NavLink>
             </div>
             <div className="auth-input-wrapper">
               <LockOutlinedIcon className="auth-input-icon" />

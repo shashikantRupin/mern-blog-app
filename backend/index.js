@@ -3,6 +3,8 @@ const express = require('express');
 const { connectDB } = require('./configs/db');
 const bcrypt = require('bcrypt');
 const UserModel = require('./models/User.module');
+const OtpModel = require('./models/Otp.module');
+const { sendOtpEmail } = require('./utils/emailService');
 const jwt = require('jsonwebtoken');
 const blogRouter = require('./Router/blog.Routes');
 const { authentication } = require('./middleware/authentication');
@@ -102,6 +104,147 @@ app.post('/login', async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     return res.status(500).json({ msg: 'Server error during login', error: error.message });
+  }
+});
+
+// ==========================================
+// FORGOT PASSWORD & OTP VERIFICATION ENDPOINTS
+// ==========================================
+
+// 1. Send OTP to user's email
+app.post('/forgot-password/send-otp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ msg: 'Please provide your registered email address.' });
+  }
+
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await UserModel.findOne({ email: normalizedEmail });
+    if (!user) {
+      return res.status(404).json({ msg: 'No account found with this email address.' });
+    }
+
+    // Generate random 6-digit numeric OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Invalidate any existing OTP for this email
+    await OtpModel.deleteMany({ email: normalizedEmail });
+
+    // Store new OTP with 10-minute expiry
+    await OtpModel.create({
+      email: normalizedEmail,
+      otp,
+    });
+
+    // Send Email with OTP template
+    try {
+      await sendOtpEmail({
+        to: normalizedEmail,
+        otp,
+        userName: user.name,
+      });
+    } catch (mailError) {
+      console.error('[MAIL ERROR] Failed to send email via transporter:', mailError);
+    }
+
+    console.log(`\n========================================`);
+    console.log(`[FORGOT PASSWORD] Generated OTP for: ${normalizedEmail}`);
+    console.log(`[FORGOT PASSWORD] 6-Digit OTP Code: ${otp}`);
+    console.log(`========================================\n`);
+
+    return res.status(200).json({
+      msg: `A 6-digit verification code has been sent to ${normalizedEmail}. Please check your inbox.`,
+      email: normalizedEmail,
+    });
+  } catch (error) {
+    console.error('Send OTP error:', error);
+    return res.status(500).json({ msg: 'Failed to generate verification code. Please try again.', error: error.message });
+  }
+});
+
+// 2. Verify OTP
+app.post('/forgot-password/verify-otp', async (req, res) => {
+  const { email, otp } = req.body;
+  if (!email || !otp) {
+    return res.status(400).json({ msg: 'Email and 6-digit verification code are required.' });
+  }
+
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+    const cleanOtp = otp.toString().trim();
+
+    const otpRecord = await OtpModel.findOne({ email: normalizedEmail, otp: cleanOtp });
+    if (!otpRecord) {
+      return res.status(400).json({ msg: 'Invalid or expired verification code. Please request a new code.' });
+    }
+
+    return res.status(200).json({
+      msg: 'Verification code verified successfully.',
+      verified: true,
+    });
+  } catch (error) {
+    console.error('Verify OTP error:', error);
+    return res.status(500).json({ msg: 'Error verifying code. Please try again.', error: error.message });
+  }
+});
+
+// 3. Reset Password with OTP & New Password
+app.post('/forgot-password/reset-password', async (req, res) => {
+  const { email, otp, newPassword, confirmPassword } = req.body;
+
+  if (!email || !otp || !newPassword || !confirmPassword) {
+    return res.status(400).json({ msg: 'Please provide all required fields.' });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ msg: 'New password and confirm password do not match.' });
+  }
+
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+    const cleanOtp = otp.toString().trim();
+
+    // Verify OTP record
+    const otpRecord = await OtpModel.findOne({ email: normalizedEmail, otp: cleanOtp });
+    if (!otpRecord) {
+      return res.status(400).json({ msg: 'Verification code is invalid or has expired. Please request a new one.' });
+    }
+
+    // Strong Password Validation matching signup rules
+    const hasMinLength = newPassword.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(newPassword);
+    const hasLowerCase = /[a-z]/.test(newPassword);
+    const hasDigit = /[0-9]/.test(newPassword);
+    const hasSpecialChar = /[@$!%*?&#^()_+\-=\[\]{};':"\\|,.<>\/?~`]/.test(newPassword);
+
+    if (!hasMinLength || !hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecialChar) {
+      return res.status(400).json({
+        msg: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., Rupin@123).'
+      });
+    }
+
+    // Find User
+    const user = await UserModel.findOne({ email: normalizedEmail });
+    if (!user) {
+      return res.status(404).json({ msg: 'User account not found.' });
+    }
+
+    // Hash new password and update
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    // Invalidate the used OTP
+    await OtpModel.deleteMany({ email: normalizedEmail });
+
+    return res.status(200).json({
+      msg: 'Password has been successfully reset! You can now log in with your new password.',
+      success: true,
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    return res.status(500).json({ msg: 'Failed to reset password. Please try again.', error: error.message });
   }
 });
 

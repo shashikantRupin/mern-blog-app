@@ -55,7 +55,7 @@ const categories = [
 ];
 
 const Home = () => {
-  const { token, loggedIn, getTime } = useContext(AuthContext);
+  const { token, loggedIn, getTime, getReadTime } = useContext(AuthContext);
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState("");
@@ -237,7 +237,9 @@ const Home = () => {
                       <AccessTimeIcon fontSize="inherit" />
                       {getTime ? getTime(blog.createdAt) : "Recently"}
                     </span>
-                    <span className="card-read-time">4 min read</span>
+                    <span className="card-read-time">
+                      {getReadTime ? getReadTime(blog.content || blog.description) : "1 min read"}
+                    </span>
                   </div>
 
                   <Link to={`/blogDetail/${blog._id}`} className="card-title-link">
@@ -284,7 +286,9 @@ const Home = () => {
                       <AccessTimeIcon fontSize="inherit" />
                       {blog.date}
                     </span>
-                    <span className="card-read-time">5 min read</span>
+                    <span className="card-read-time">
+                      {getReadTime ? getReadTime(blog.content) : "1 min read"}
+                    </span>
                   </div>
 
                   <h3 className="card-title">{blog.title}</h3>

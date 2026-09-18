@@ -17,7 +17,7 @@ const baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:7000";
 const BlogDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { token, confirmAction, getTime } = useContext(AuthContext);
+  const { token, confirmAction, getTime, getReadTime } = useContext(AuthContext);
 
   const [blog, setBlog] = useState(null);
   const [formData, setFormData] = useState({
@@ -348,6 +348,9 @@ const BlogDetail = () => {
             <span className="article-date">
               <AccessTimeIcon fontSize="inherit" />
               {getTime ? getTime(blog.createdAt) : "Recently"}
+            </span>
+            <span className="article-read-time">
+              {getReadTime ? getReadTime(blog.content) : "1 min read"}
             </span>
           </div>
 

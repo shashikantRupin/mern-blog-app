@@ -26,7 +26,7 @@ const Blogs = () => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const { token, getTime } = useContext(AuthContext);
+  const { token, getTime, getReadTime } = useContext(AuthContext);
 
   const fetchBlogs = async (categoryType) => {
     setLoading(true);
@@ -150,7 +150,9 @@ const Blogs = () => {
                     <AccessTimeIcon fontSize="inherit" />
                     {getTime ? getTime(blog.createdAt) : "Recently"}
                   </span>
-                  <span className="card-read-time">4 min read</span>
+                  <span className="card-read-time">
+                    {getReadTime ? getReadTime(blog.content) : "1 min read"}
+                  </span>
                 </div>
 
                 <Link to={`/blogDetail/${blog._id}`} className="card-title-link">
