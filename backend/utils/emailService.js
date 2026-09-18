@@ -1,8 +1,8 @@
+const { Resend } = require('resend');
 const nodemailer = require('nodemailer');
 
 /**
- * Configure Nodemailer Transporter
- * Supports Gmail Service or custom SMTP configuration
+ * Configure Nodemailer Transporter for SMTP Fallback
  */
 const createTransporter = () => {
   const emailUser = process.env.EMAIL_USER ? process.env.EMAIL_USER.trim() : '';
@@ -17,17 +17,13 @@ const createTransporter = () => {
         user: process.env.SMTP_USER ? process.env.SMTP_USER.trim() : emailUser,
         pass: process.env.SMTP_PASS ? process.env.SMTP_PASS.trim().replace(/\s+/g, '') : emailPass,
       },
-      family: 4, // Force IPv4
-      tls: {
-        rejectUnauthorized: false,
-      },
+      family: 4,
+      tls: { rejectUnauthorized: false },
       connectionTimeout: 10000,
-      greetingTimeout: 10000,
       socketTimeout: 15000,
     });
   }
 
-  // Use direct Gmail SMTP SSL on port 465 with IPv4 forcing for 100% reliability on Render
   return nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -36,12 +32,9 @@ const createTransporter = () => {
       user: emailUser,
       pass: emailPass,
     },
-    family: 4, // Force IPv4 to prevent Render IPv6 DNS connection drops
-    tls: {
-      rejectUnauthorized: false,
-    },
+    family: 4,
+    tls: { rejectUnauthorized: false },
     connectionTimeout: 10000,
-    greetingTimeout: 10000,
     socketTimeout: 15000,
   });
 };
@@ -131,7 +124,8 @@ const getOtpHtmlTemplate = (otp, userName = 'Creator') => {
 };
 
 /**
- * Send OTP Email Function
+ * Send OTP Email Function (Supports Resend HTTPS API and Nodemailer SMTP Fallback)
+ *
  * @param {Object} options
  * @param {string} options.to - Recipient email address
  * @param {string} options.otp - 6-digit numeric OTP code
@@ -139,39 +133,61 @@ const getOtpHtmlTemplate = (otp, userName = 'Creator') => {
  * @returns {Promise<Object>}
  */
 const sendOtpEmail = async ({ to, otp, userName }) => {
+  const resendApiKey = process.env.RESEND_API_KEY;
   const emailUser = process.env.EMAIL_USER;
   const emailPass = process.env.EMAIL_PASS;
 
-  if (!emailUser || !emailPass) {
-    console.warn('\n⚠️ [EMAIL SERVICE WARNING]');
-    console.warn('EMAIL_USER and EMAIL_PASS are not configured in backend/.env.');
-    console.warn(`Generated OTP for ${to}: ${otp}`);
-    console.warn('To send real emails to inboxes, add EMAIL_USER and EMAIL_PASS to backend/.env\n');
-    return {
-      success: false,
-      error: 'SMTP credentials (EMAIL_USER & EMAIL_PASS) are not set in backend/.env',
-      simulated: true,
+  const htmlContent = getOtpHtmlTemplate(otp, userName);
+  const textContent = `Your BlogNest password reset code is: ${otp}. This code is valid for 10 minutes.`;
+  const subject = `🔐 BlogNest Password Reset Code: ${otp}`;
+
+  // 1. PRIMARY: Resend HTTPS API (Port 443 — 100% works on Render/cloud hosting)
+  if (resendApiKey) {
+    try {
+      const resend = new Resend(resendApiKey.trim());
+      const fromEmail = process.env.EMAIL_FROM || 'BlogNest Security <onboarding@resend.dev>';
+
+      const { data, error } = await resend.emails.send({
+        from: fromEmail,
+        to: [to],
+        subject: subject,
+        text: textContent,
+        html: htmlContent,
+      });
+
+      if (error) {
+        console.error('[RESEND API ERROR]', error);
+        throw new Error(error.message || 'Resend email delivery failed');
+      }
+
+      console.log(`[RESEND API] OTP Email sent successfully to ${to} (Message ID: ${data?.id})`);
+      return { success: true, messageId: data?.id, provider: 'resend' };
+    } catch (resendError) {
+      console.error('[RESEND FAILED]', resendError.message);
+      if (!emailUser || !emailPass) {
+        throw resendError;
+      }
+      console.log('[EMAIL SERVICE] Falling back to Nodemailer SMTP...');
+    }
+  }
+
+  // 2. FALLBACK: Nodemailer SMTP
+  if (emailUser && emailPass) {
+    const transporter = createTransporter();
+    const mailOptions = {
+      from: process.env.EMAIL_FROM || `"BlogNest (No-Reply)" <${emailUser}>`,
+      to: to,
+      subject: subject,
+      text: textContent,
+      html: htmlContent,
     };
-  }
 
-  const transporter = createTransporter();
-
-  const mailOptions = {
-    from: process.env.EMAIL_FROM || `"BlogNest" <${emailUser}>`,
-    to: to,
-    subject: `🔐 BlogNest Password Reset Code: ${otp}`,
-    text: `Your BlogNest password reset code is: ${otp}. This code is valid for 10 minutes.`,
-    html: getOtpHtmlTemplate(otp, userName),
-  };
-
-  try {
     const info = await transporter.sendMail(mailOptions);
-    console.log(`[EMAIL SERVICE] OTP Email sent successfully to ${to} (Message ID: ${info.messageId})`);
-    return { success: true, messageId: info.messageId };
-  } catch (error) {
-    console.error(`[EMAIL SERVICE ERROR] Failed to send email to ${to}:`, error.message);
-    throw error;
+    console.log(`[NODEMAILER] OTP Email sent successfully to ${to} (Message ID: ${info.messageId})`);
+    return { success: true, messageId: info.messageId, provider: 'nodemailer' };
   }
+
+  throw new Error('No email provider configured. Please set RESEND_API_KEY or EMAIL_USER/EMAIL_PASS in environment variables.');
 };
 
 module.exports = { sendOtpEmail };
