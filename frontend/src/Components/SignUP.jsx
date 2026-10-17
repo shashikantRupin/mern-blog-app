@@ -149,7 +149,7 @@ const Signup = () => {
           <div className="auth-field">
             <div className="auth-label-row">
               <label className="auth-label">Password</label>
-              <span className="password-example-hint">e.g. Rupin@123</span>
+       
             </div>
 
             <div className="auth-input-wrapper">
